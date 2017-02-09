@@ -18,28 +18,32 @@
 
 \usepackage{dirtree} %directory tree visualisation
 
+\usepackage[
+backend=biber,
+sortlocale=en_US,
+style=iso-authoryear
+]{biblatex}
+\bibliography{mybibliographyfile}
+
+
 % % list of acronyms
 % \usepackage[acronym,nonumberlist,toc,numberedsection=autolabel]{glossaries}
 % \iflanguage{czech}{\renewcommand*{\acronymname}{Seznam pou{\v z}it{\' y}ch zkratek}}{}
 % \makeglossaries
 
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-% EDIT THIS
-% % % % % % % % % % % % % % % % % % % % % % % % % % % % % % 
-
-\department{Department of \ldots (SPECIFY)}
-\title{Thesis title (SPECIFY)}
-\authorGN{Your Given Name(s) (SPECIFY)} %author's given name/names
-\authorFN{Your Family Name (surname, SPECIFY)} %author's surname
-\author{Your Name (SPECIFY)} %author's name without academic degrees
-\authorWithDegrees{Your Name \& degrees} %author's name with academic degrees
-\supervisor{Your Supervisor's Name (SPECIFY)}
-\acknowledgements{THANKS}
-\abstractEN{Summarize the contents and contribution of your work in a few sentences in English language.}
-\abstractCS{V několika větách shrňte obsah a p{\v r}{\' i}nos t{\' e}to pr{\' a}ce v {\v c}esk{\' e}m jazyce.}
+\department{Department of Software Engineering}
+\title{Location-based Role Playing Game}
+\authorGN{Jakub} %author's given name/names
+\authorFN{Čech} %author's surname
+\author{Jakub Čech} %author's name without academic degrees
+\authorWithDegrees{Jakub Čech} %author's name with academic degrees
+\supervisor{Ing. Miroslav Balík, Ph.D.}
+\acknowledgements{I would like to thank myself for doing this. I am an awesome and humble person. With great power comes great responsibility and no one else is as good or worthy as I am to be thanked. Ave Kuba!}
+\abstractEN{Place the 2 cups of crushed ice into a cocktail shaker. Pour the rum, lime juice, and simple syrup over the ice, cover, and shake well. Remove the ice from your serving glass and strain the drink into it. Serve immediately.}
+\abstractCS{Hvězdy jsou krásné, protože je na nich květina, kterou není vidět. Poušť je krásná právě tím, že někde skrývá studnu. Ať je to dům, hvězdy nebo poušť, to, co je dělá krásnými, je neviditelné!}
 \placeForDeclarationOfAuthenticity{Prague}
-\keywordsCS{Replace with comma-separated list of keywords in Czech.}
-\keywordsEN{Replace with comma-separated list of keywords in English.}
+\keywordsCS{\#deep, \#thoughtoftheday, \#follow4follow}
+\keywordsEN{Daiquiri, Coctail, Rum, Cuba}
 \declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
 
 
@@ -50,22 +54,38 @@
 	
 	\setsecnumdepth{part}
 	\chapter{Introduction}
+	\input{intro/intro}
 	
 	
+	\setsecnumdepth{all}	
+	\chapter{Project overview}
+	\input{overview/overview}
 	
-	\setsecnumdepth{all}
-	\chapter{State-of-the-art}
+	\chapter{Analysis}
+	\input{analysis/analysis}
 	
-	\chapter{Analysis and design}
+	\chapter{Design}
+	\input{design/design}
 	
-	\chapter{Realisation}
+	\chapter{Geo-data mining}
+	\input{mining/mining}
+	
+	\chapter{Implementation}
+	\input{implementation/implementation}
+	
+	\chapter{Deployment}
+	\input{deployment/deployment}
+	
+	\chapter{Testing}
+	\input{testing/testing}
+	
 	
 	\setsecnumdepth{part}
-	\chapter{Conclusion}
+	\chapter{Results}
 	
 	
-	\bibliographystyle{iso690}
-	\bibliography{mybibliographyfile}
+	\printbibliography
+
 	
 	\setsecnumdepth{all}
 	\appendix
