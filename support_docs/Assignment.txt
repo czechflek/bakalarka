@@ -1,0 +1,11 @@
+Create the server part of the RPG game Stories of the Lost World with augmented reality elements for Android OS.
+Create a storyline, rules and gameplay items for the game.
+Obtain and process geographic data for the game objects.
+Research what architectures are commonly used for multiplayer game servers, chose one and use it for your server.
+Design the database model, research and implement a caching strategy to relieve stress on the database.
+Implement a secured server-client communication. 
+Create an interface for the server administration. 
+Allow players to log in using their Google account. Facilitate interactions among players.
+Test the functionality of the server. Test and analyze how many clients the server can handle. 
+
+Work in cooperation with Tomáš Zahálka.
