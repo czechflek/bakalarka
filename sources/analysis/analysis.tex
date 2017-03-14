@@ -27,23 +27,80 @@
 	The game is very similar to Ingress and uses the same crowd-sourced geographical data.
 	
 \section{Use Cases}
-\begin{figure}[h]	
-	\includegraphics[width=\textwidth]{figures/UseCaseDiagram}
-	\centering
-	\caption{Use case diagram}
+
+	\subsection{Use case diagram}
 	
-\end{figure}
+		\begin{figure}[h]	
+			\includegraphics[width=\textwidth]{figures/UseCaseDiagram}
+			\centering			
+			\caption{Use case diagram}
+			\label{fig:usecasediagram}
+		\end{figure}
+	
+	\subsection{Use case descriptions}
+		The following section refer to the use-cases introduced in Figure \ref{fig:usecasediagram}.
+		\begin{enumerate}
+			\item \textbf{Register account} \\
+			\item \textbf{Login to the game} \\
+			\item \textbf{Change the inventory content} \\
+			\item \textbf{Go on a quest} \\
+			\item \textbf{Fight a common monster} \\
+			\item \textbf{Respawn} \\
+			\item \textbf{Update a quest progress} \\
+			\item \textbf{Create a new quest} \\
+			\item \textbf{Edit or delete a quest} \\
+						
+		\end{enumerate}
+	
 	
 \section{Requirements}
 
 	\subsection{Functional}
-
+		\begin{enumerate}
+			\item \textbf{Users can use their Google accounts to login and play} \\
+			For player's convenience, a Google account is required to play. The application does not have to store any password. 
+			
+			\item \textbf{Client can request nearby game locations} \\
+			Upon client's request, the server has to respond with all game locations near the position of the client. The request can contain a filter.
+			
+			\item \textbf{Client can add, delete and update the player's inventory} \\
+		\end{enumerate}
+		
+		
 	\subsection{Non-functional}
 	
+		\begin{enumerate}
+			\item \textbf{The data layer consists of a database engine and a caching} \\
+			Game Server never accesses database directly. Data are retrieved from the database upon request and then cached. Upper layers communicate exclusively with cache.		
+			
+			\item \textbf{The server provides an API for client} \\
+			The API support at least following:
+			\begin{enumerate}
+				\item Retrieve nearby game locations
+				\item Create player
+				\item Update player's data (inventory, experience, resources, quests progress etc.)
+				\item Provide information about a quest 			
+			\end{enumerate}
+			
+			\item \textbf{The communication between client and server parts of the application must be secure} \\
+			All data sent from and to a client has to be encrypted.
+	
+			\item \textbf{Client can only connect to a Connection Server} \\
+			Several Connection Servers exist to prevent a bottle-neck. Client selects the Connection Server by an algorithm. Client does not have an access to any other part of the server.
+		\end{enumerate}
 	\subsection{System and Interface}
+	
+		\begin{enumerate}
+			\item \textbf{System uses Java 8 SE as an execution environment} \\
+			
+			\item \textbf{Operating system for the server is Debian 8} \\
+			
+			\item \textbf{Database engine is MySQL} \\
+			
+			\item \textbf{Cache engine is Redis} \\
+		\end{enumerate}
 	
 \section{Technology}
 
 	\subsection{Frameworks}
 	
-\section{Use-cases}
