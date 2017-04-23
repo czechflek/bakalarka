@@ -43,8 +43,9 @@ DROP TABLE IF EXISTS `bachelors`.`game_object_type` ;
 
 CREATE TABLE IF NOT EXISTS `bachelors`.`game_object_type` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
+  `name` VARCHAR(45) NOT NULL,
   `ownable` BIT NULL DEFAULT 0,
+  `description` VARCHAR(200) NULL,
   PRIMARY KEY (`id`))
 ENGINE = InnoDB;
 
@@ -56,10 +57,10 @@ DROP TABLE IF EXISTS `bachelors`.`game_object` ;
 
 CREATE TABLE IF NOT EXISTS `bachelors`.`game_object` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `count` INT NOT NULL DEFAULT 1,
+  `name` VARCHAR(45) NULL,
+  `description` VARCHAR(200) NULL,
   `root` BIT NOT NULL DEFAULT 1,
   `game_object_type_id` INT UNSIGNED NOT NULL,
-  `description` VARCHAR(200) NULL,
   PRIMARY KEY (`id`),
   INDEX `fk_game_object_game_object_type1_idx` (`game_object_type_id` ASC),
   CONSTRAINT `fk_game_object_game_object_type1`
@@ -118,8 +119,10 @@ DROP TABLE IF EXISTS `bachelors`.`attribute_key` ;
 
 CREATE TABLE IF NOT EXISTS `bachelors`.`attribute_key` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(45) NULL,
-  PRIMARY KEY (`id`))
+  `name` VARCHAR(45) NOT NULL,
+  `datatype` VARCHAR(10) NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `name_UNIQUE` (`name` ASC))
 ENGINE = InnoDB;
 
 
@@ -131,7 +134,7 @@ DROP TABLE IF EXISTS `bachelors`.`game_object_type_attribute` ;
 CREATE TABLE IF NOT EXISTS `bachelors`.`game_object_type_attribute` (
   `game_object_type_id` INT UNSIGNED NOT NULL,
   `attribute_key_id` INT UNSIGNED NOT NULL,
-  `value` VARCHAR(45) NOT NULL,
+  `value` VARCHAR(45) NULL,
   PRIMARY KEY (`game_object_type_id`, `attribute_key_id`),
   INDEX `fk_game_object_type_attribute_attribute_key1_idx` (`attribute_key_id` ASC),
   CONSTRAINT `fk_game_object_type_attribute_game_object_type1`
@@ -153,10 +156,11 @@ ENGINE = InnoDB;
 DROP TABLE IF EXISTS `bachelors`.`user_inventory` ;
 
 CREATE TABLE IF NOT EXISTS `bachelors`.`user_inventory` (
+  `id` INT NOT NULL AUTO_INCREMENT,
   `user_id` VARCHAR(40) NOT NULL,
   `game_object_type_id` INT UNSIGNED NOT NULL,
   `count` INT NULL DEFAULT 1,
-  PRIMARY KEY (`user_id`, `game_object_type_id`),
+  PRIMARY KEY (`id`),
   INDEX `fk_userInventory_user1_idx` (`user_id` ASC),
   INDEX `fk_user_inventory_game_object_type1_idx` (`game_object_type_id` ASC),
   CONSTRAINT `fk_userInventory_user1`
@@ -177,11 +181,12 @@ CREATE TABLE IF NOT EXISTS `bachelors`.`user_inventory` (
 DROP TABLE IF EXISTS `bachelors`.`game_object_content` ;
 
 CREATE TABLE IF NOT EXISTS `bachelors`.`game_object_content` (
+  `id` BIGINT NOT NULL AUTO_INCREMENT,
   `parent_id` INT UNSIGNED NOT NULL,
   `child_id` INT UNSIGNED NOT NULL,
-  PRIMARY KEY (`parent_id`, `child_id`),
   INDEX `fk_game_object_has_game_object_game_object2_idx` (`child_id` ASC),
   INDEX `fk_game_object_has_game_object_game_object1_idx` (`parent_id` ASC),
+  PRIMARY KEY (`id`),
   CONSTRAINT `fk_game_object_has_game_object_game_object1`
     FOREIGN KEY (`parent_id`)
     REFERENCES `bachelors`.`game_object` (`id`)
