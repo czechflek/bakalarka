@@ -1,0 +1,537 @@
+swagger: '2.0'
+info:
+  title: Bachelors - Connection Server API
+  description: Explore the magical world!
+  version: "1.0.0"
+# the domain of the service
+host: localhost:8080
+# array of all schemes that your API supports
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+
+paths:
+  /login:
+    get:
+      summary: Login
+      description: |
+        The Login endpoint verifies the Google ID token and generates an access code for future request. When successfully authenticated, user profile and the access code is returned.
+      parameters:
+        - name: token
+          in: query
+          description: Google ID token
+          required: true
+          type: string
+      tags:
+        - User
+        - Login
+      responses:
+        200:
+          description: Succesfully logged in, user profile and access code returned.
+          schema:
+            $ref: '#/definitions/Profile'
+        404:
+          description: User not found, registration needed.
+        403:
+          description: Invalid token
+            
+  /login/register:
+    post:
+      summary: Registration
+      description: |
+        The Registration endpoint creates a new user on the server. The profile is initialized with default values.
+        If the username is taken or if the user already exists, then an error is returned.
+      parameters:
+        - name: body
+          in: body
+          description: User to add to the system
+          required: true
+          schema:
+            $ref: '#/definitions/UsernameWToken'
+      tags:
+        - User
+        - Login
+      responses:
+        200:
+          description: Succesfully registered and logged in, user profile and access code returned.
+          schema:
+            $ref: '#/definitions/Profile'
+            
+        409:
+          description: Either username exists or the user is already registered. See error details.
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /user:
+    get:
+      summary: User Profile
+      description: |
+        The User endpoint returns the user profile.
+      parameters:
+        - name: accessCode
+          in: query
+          description: User's access code
+          required: true
+          type: string
+      tags:
+        - User
+      responses:
+        200:
+          description: User profile and access code returned.
+          schema:
+            $ref: '#/definitions/Profile'
+        404:
+          description: User not found, registration needed.
+        403:
+          description: Invalid access code
+            
+  /user/inventory:
+    get:
+      summary: User Inventory
+      description: |
+        The User Inventory endpoint return all the items in the user's inventory and the information about what is equipped in which slot.
+      parameters:
+        - name: accessCode
+          in: query
+          description: User's access code
+          required: true
+          type: string
+      tags:
+        - Inventory
+        - Objects
+      responses:
+        200:
+          description: List of items and a map of equipment
+          schema:
+            $ref: '#/definitions/InventoryWEquipment'
+        403:
+          description: User not logged in
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found
+          schema:
+            $ref: '#/definitions/Error'
+  /location:
+    get:
+      summary: Nearby Locations
+      description: |
+        The Location endpoint retrieves all nearby locations in radius 200 m from the provided coordinates. The locations are returned along with their associated objects.
+      parameters:
+        - name: lat
+          in: query
+          description: Latitude
+          required: true
+          type: number
+          format: double
+        - name: lon
+          in: query
+          description: Latitude
+          required: true
+          type: number
+          format: double
+        - name: accessCode
+          in: query
+          description: User's access code
+          required: true
+          type: string
+      tags:
+        - Location
+        - Objects
+        - Monster
+      responses:
+        200:
+          description: List of nearby locations with objects assigned to them
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Location'
+        500:
+          description: Unexpected Error
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /action/kill:
+    post:
+      summary: Kill Object
+      description: |
+        The Kill endpoint performs kill action on the selected object and location. The location will be temporarily excluded from future requests to /location. User health will be updated, experience and gold will be added. The endoint return killConfirmedCode which is needed to perform "Collect" action
+      parameters:
+        - name: body
+          in: body
+          description: Data for collect action
+          required: true
+          schema:
+            $ref: '#/definitions/Kill'
+      tags:
+        - Action
+        - Monster
+      responses:
+        200:
+          description: One-time code for kill confirmation
+          schema:
+            $ref: '#/definitions/KillConfirmed'
+        400:
+          description: Invalid data
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found, registration needed.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Invalid access code
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+          
+  /action/collect:
+    post:
+      summary: Collect Items
+      description: |
+        The Collect endpoint allows collecting items from monster's inventory after kill. It can be called only once after "Kill".
+      parameters:
+        - name: body
+          in: body
+          description: Data for collect action
+          required: true
+          schema:
+            $ref: '#/definitions/Collect'
+      tags:
+        - Action
+        - Monster
+        - Inventory
+      responses:
+        200:
+          description: User's inventory
+          schema:
+            $ref: '#/definitions/InventoryWEquipment'
+        400:
+          description: Invalid data
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found, registration needed.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Invalid access code
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  /action/equip:
+    put:
+      summary: Equip Item
+      description: |
+        The Equip endpoint equips an item from user's inventory to the specified slot.
+      parameters:
+        - name: body
+          in: body
+          description: Data for collect action
+          required: true
+          schema:
+            $ref: '#/definitions/Equip'
+      tags:
+        - Action
+        - Inventory
+      responses:
+        200:
+          description: Success
+        400:
+          description: Invalid data
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found, registration needed.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Invalid access code
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /action/buy:
+    post:
+      summary: Buy Items
+      description: |
+        The Buy endpoint allows to buy items from a shop.
+      parameters:
+        - name: body
+          in: body
+          description: Data for collect action
+          required: true
+          schema:
+            $ref: '#/definitions/Buy'
+      tags:
+        - Action
+        - Building
+        - Inventory
+      responses:
+        200:
+          description: User's inventory
+          schema:
+            $ref: '#/definitions/InventoryWEquipment'
+        400:
+          description: Invalid data
+          schema:
+            $ref: '#/definitions/Error'
+        404:
+          description: User not found, registration needed.
+          schema:
+            $ref: '#/definitions/Error'
+        403:
+          description: Invalid access code
+          schema:
+            $ref: '#/definitions/Error'
+        500:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+definitions:
+
+  Profile:
+    type: object
+    properties:
+      id:
+        type: string
+        description: User ID
+      username:
+        type: string
+        description: Username of the user
+      email:
+        type: string
+        description: The registered e-mail
+      active:
+        type: boolean
+        description: True if the profile is active, false otherwise
+      health:
+        type: integer
+        description: Health
+      experience:
+        type: integer
+        description: Experience
+      gold:
+        type: integer
+        description: Gold - common currency
+      gems:
+        type: integer
+        description: Diamonds - premium currency
+      accessCode:
+        type: string
+        description: Access code for the future identification
+        
+  UsernameWToken:
+    type: object
+    properties:
+      username:
+        type: string
+        description: Chosen username
+      token:
+        type: string
+        description: Google ID token
+
+  InventoryWEquipment:
+    type: object
+    properties:
+      inventory:
+        type: array
+        description: Array of the owned items
+        items:
+          $ref: '#/definitions/InventoryItem'
+      equipment:
+        $ref: '#/definitions/Equipment'
+        
+  InventoryItem:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the item
+        format: int64
+      gameObjectTypeId:
+        type: integer
+        description: Type of the item
+        format: int64
+        
+  Equipment:
+    type: object
+    properties:
+      feet:
+        type: integer
+        description: ID of the item equipped on feet
+        format: int64
+      legs:
+        type: integer
+        description: ID of the item equipped on legs
+        format: int64
+      chest:
+        type: integer
+        description: ID of the item equipped on chest
+        format: int64
+      head:
+        type: integer
+        description: ID of the item equipped on head
+        format: int64
+      necklace:
+        type: integer
+        description: ID of the item equipped on necklace
+        format: int64
+      belt:
+        type: integer
+        description: ID of the item equipped on belt
+        format: int64
+      leftHand:
+        type: integer
+        description: ID of the item equipped in left hand
+        format: int64
+      rightHand:
+        type: integer
+        description: ID of the item equipped in right hand
+        format: int64
+      dualHand:
+        type: integer
+        description: ID of the item equipped in both hands
+        format: int64
+      item:
+        type: integer
+        description: ID of the equipped item 
+        format: int64
+        
+  Location:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the location
+        format: int64
+      latitude:
+        type: number
+        description: Latitude of the location
+        format: double
+      longitude:
+        type: number
+        description: Longitude of the location
+        format: double
+      gameObject:
+        $ref: '#/definitions/GameObject'
+        
+  GameObject:
+    type: object
+    properties:
+      id:
+        type: integer
+        description: ID of the object
+        format: int64
+      name:
+        type: string
+        description: Name of the game object or null
+      description:
+        type: string
+        description: Description of the game object or null
+      gameObjectTypeId:
+        type: integer
+        description: Type of the object
+        format: int64
+      gameObjects:
+        type: array
+        description: Array of GameObjects
+        items:
+          $ref: '#/definitions/GameObject'
+  
+  Kill:
+    type: object
+    properties:
+      accessCode:
+        type: string
+        description: User's access code
+      locationid:
+        type: integer
+        description: ID of the location
+        format: int64
+      gameObjectId:
+        type: integer
+        description: ID of the killed object
+        format: int64
+      health:
+        type: integer
+        description: User health after fight
+        format: int32
+  
+  KillConfirmed:
+    type: object
+    properties:
+      killConfirmedCode:
+        type: integer
+        description: One-time kill confirmation code
+        format: int64
+  
+  Collect:
+    type: object
+    properties:
+      accessCode:
+        type: string
+        description: User's access code
+      killConfirmedCode:
+        type: integer
+        description: One-time kill confirmation code
+        format: int64
+      gameObjects:
+        type: array
+        description: IDs of game objects to collect
+        items:
+          type: integer
+          description: ID of a game object
+          format: int64
+  
+  Equip:
+    type: object
+    properties:
+      accessCode:
+        type: string
+        description: User's access code
+      itemId:
+        type: integer
+        description: ID of the item from user inventory
+        format: int64
+      slot:
+        type: string
+        description: Slot to equip the item to
+        
+  Buy:
+    type: object
+    properties:
+      accessCode:
+        type: string
+        description: User's access code
+      shopid:
+        type: integer
+        description: ID of the visited shop
+        format: int64
+      itemId:
+        type: integer
+        description: ID of the item to buy
+        format: int64
+          
+          
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      reason:
+        type: string
