@@ -22,7 +22,7 @@
 	After its success with Ingress, Niantic started working on a new game Pokemon GO. Once
 	released, the game became incredible hit. Even though the game faced many problems during
 	its launch, mainly caused by the unexpected success and more active users than Pokémon
-	GO was able to handle, in the first 80 days Pokémon GO reached about 550 million downloads and earned about \$470 million.
+	GO was able to handle, in the first 80 days Pokémon GO reached about 550 millions downloads and earned about \$470 million.
 	
 	The game is very similar to Ingress and uses the same crowd-sourced geographical data.
 	
@@ -55,15 +55,60 @@
 	
 \section{Requirements}
 
-	\subsection{Functional}
+	\subsection{Functional Requirements}
+		\subsubsection{Rules}
 		\begin{enumerate}
-			\item \textbf{Users can use their Google accounts to login and play} \\
+			\item \textbf{The server must provide API to clients} \\
+			The key requirement for the server is to allow receiving HTTP(S) requests. When processed, the server responds in JSON format.
+						
+			\item \textbf{The player's character has attributes} \\
+			The character has a set of attributes, including health, experience, level, and owned gold. The maximum health increases with level. The experience is rewarded after certain actions, e.g. after killing a monster. The gold is primary in-game currency.
+			  
+			\item \textbf{A player can own items} \\
+			A player has an inventory which can contain various types of items. The item can be for example sword, potion, armor etc.
+			
+			\item \textbf{A game object has a type and inherits all its properties} \\
+			The type of game object specifies allowed actions, its attributes, default name and description.			
+			
+			\item \textbf{A game object can be a monster} \\
+			The monster can be killed but can also inflict damage to the player. It has its own inventory and there's a reward for killing the monster in a form of gold and experience.
+			
+			\item \textbf{A game object can be a shop} \\
+			The shop can contain several items with specified price.  
+			
+			\item \textbf{A game object can be an item} \\	
+			The item can be one of the many objects useful to a player. Examples of the items are health potion, sword, armor, necklace and similar.
+			
+			\item \textbf{Each game object has its own inventory} \\
+			The inventory contains other game objects. Example of this requirement is a monster with a potion and a sword in its inventory; both will be given to the player who kills the monster.  
+			
+			\item \textbf{The server stores a list of predefined locations} \\	
+			Real geographic location for the game objects are stored on the server to ensure every player has the same location-object pair. 
+								
+			\item \textbf{A game object can independently exist at many locations} \\
+			This requirement aims to help maintain the game objects efficiently by administrators. It allows creating small set of abstract game objects with predefined inventories and other attributes. 
+			
+			\item \textbf{If a player kills a monster at a location, the monster will be hidden for a period} \\
+			To prevent the player from killing the same monster continuously without a need of moving somewhere else, the location should be hidden for a certain period after the kill.
+			
+			\item \textbf{The server should provide API for administration} \\	
+			
+					
+			\item \textbf{The server must persist player’s profile between sessions} \\
+		\end{enumerate}
+		\subsubsection{Features}
+		\begin{enumerate}
+			\item \textbf{A player registers and logs in the game using Google account} \\
 			For player's convenience, a Google account is required to play. The application does not have to store any password. 
+			\item \textbf{A client can get nearby game objects based on his location} \\
 			
-			\item \textbf{Client can request nearby game locations} \\
-			Upon client's request, the server has to respond with all game locations near the position of the client. The request can contain a filter.
-			
-			\item \textbf{Client can add, delete and update the player's inventory} \\
+			\item \textbf{A player can kill a monster} \\
+			\item \textbf{A player can be killed be a monster} \\
+			\item \textbf{A player can collect items from the monster he killed} \\
+			\item \textbf{A player can equip an item} \\				
+			\item \textbf{A player can buy object from a shop} \\
+			\item \textbf{A player can use an item from his inventory} \\
+			\item \textbf{A player can purchase in-app product} \\
 		\end{enumerate}
 		
 		
