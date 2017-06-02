@@ -83,7 +83,7 @@
 			The inventory contains other game objects. Example of this requirement is a monster with a potion and a sword in its inventory; both will be given to the player who kills the monster.  
 			
 			\item \textbf{The server stores a list of predefined locations} \\	
-			Real geographic location for the game objects are stored on the server to ensure every player has the same location-object pair. 
+			Real geographic locations for the game objects are stored on the server to ensure every player has the same location-object pair. 
 								
 			\item \textbf{A game object can independently exist at many locations} \\
 			This requirement aims to help maintain the game objects efficiently by administrators. It allows creating small set of abstract game objects with predefined inventories and other attributes. 
@@ -92,23 +92,41 @@
 			To prevent the player from killing the same monster continuously without a need of moving somewhere else, the location should be hidden for a certain period after the kill.
 			
 			\item \textbf{The server should provide API for administration} \\	
-			
+			Such API will be used to manage locations, create and edit game objects or to assign a game object to some locations. It is necessary to protect the administration endpoints from unauthorized access.
 					
 			\item \textbf{The server must persist player’s profile between sessions} \\
+			All the player's attributes, his inventory and equipment must be stored between sessions. Player will continue from the state in which he ended.
+			
 		\end{enumerate}
 		\subsubsection{Features}
 		\begin{enumerate}
 			\item \textbf{A player registers and logs in the game using Google account} \\
-			For player's convenience, a Google account is required to play. The application does not have to store any password. 
+			For the player's convenience, a Google account is required to play. The server does not have to store or handle any password. Most of the authentication process is delegated to Google servers.
+			
 			\item \textbf{A client can get nearby game objects based on his location} \\
+			The major feature of this application is being location-aware. Server must provide a method to retrieve game locations near the requested latitude and longitude. The "near area" should be circular, defined by its radius; the size have to be carefully chosen so it's big enough to cover client's maps but also small to limit the response size and the spatial search overhead.
 			
 			\item \textbf{A player can kill a monster} \\
+			When the player wins the fight, he will be rewarded by experience and gold. 			
+			
 			\item \textbf{A player can be killed be a monster} \\
+			The player can lose health during the fight with a monster. If the health reaches zero, the player dies and loses an amount of gold based on his level.
+			
 			\item \textbf{A player can collect items from the monster he killed} \\
-			\item \textbf{A player can equip an item} \\				
+			When the player wins the fight, he's offered to collect items from the monster's inventory. He can chose any subset of these items.
+			
+			\item \textbf{A player can equip an item} \\	
+			Many items in the game can be equipped. These items have predefined equipment slot, for example a sword have to be held in hand, an armor worn on chest, shoes put on feet and so on.
+						
 			\item \textbf{A player can buy object from a shop} \\
+			Gold can be exchanged for various items in shops.
+			
 			\item \textbf{A player can use an item from his inventory} \\
+			Some of the items in the game are consumables. When used, an action defined by the item is executed. For example a health potion heals the player.
+			
 			\item \textbf{A player can purchase in-app product} \\
+			The application allow a user to exchange real-life currency for the in-game one. The server should verify such purchase and add the currency to his profile.
+			
 		\end{enumerate}
 		
 		
