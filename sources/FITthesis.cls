@@ -16,8 +16,8 @@
 	\def\@lang{1}
 }
 \DeclareOption{english}{
-	\AtBeginDocument{\selectlanguage{UKenglish}}
-	\PassOptionsToPackage{UKenglish}{babel}
+	\AtBeginDocument{\selectlanguage{USenglish}}
+	\PassOptionsToPackage{USenglish, czech}{babel}
 	\def\@lang{0}
 }
 \DeclareOption{slovak}{
@@ -40,24 +40,15 @@
 \setsecnumdepth{subsubsection}
 \chapterstyle{madsen}
 
-\RequirePackage{babel}[2008/07/06]
+\RequirePackage[USenglish]{babel}
 \RequirePackage{hyperref}
 \RequirePackage{pdfpages}
 
 \RequirePackage{chngcntr}
 \counterwithout*{footnote}{chapter}
 
-\if\@lang1
-	\RequirePackage[T1]{fontenc}
-	\RequirePackage{lmodern}
-\else
-	\if\@lang2
-		\RequirePackage[T1]{fontenc}
-		\RequirePackage{lmodern}
-	\else
-		\AtBeginDocument{\selectlanguage{UKenglish}}
-	\fi
-\fi
+\RequirePackage[T1]{fontenc}
+\RequirePackage{lmodern}
 
 \setlrmargins{4cm}{*}{*}\checkandfixthelayout
 

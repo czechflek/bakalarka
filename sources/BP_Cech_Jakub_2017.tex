@@ -12,7 +12,6 @@
 % \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
 \usepackage{pdfpages}
 \usepackage{float}
-
 \usepackage{graphicx} %graphics files inclusion
 % \usepackage{subfig} %subfigures
 % \usepackage{amsmath} %advanced maths
@@ -25,6 +24,9 @@ backend=biber,
 sortlocale=en_US,
 style=iso-authoryear
 ]{biblatex}
+
+\renewcommand\labelitemi{---}
+
 \bibliography{mybibliographyfile}
 
 
@@ -36,8 +38,8 @@ style=iso-authoryear
 \department{Department of Software Engineering}
 \title{Location-based Role Playing Game}
 \authorGN{Jakub} %author's given name/names
-\authorFN{Čech} %author's surname
-\author{Jakub Čech} %author's name without academic degrees
+\authorFN{{\v C}ech} %author's surname
+\author{Jakub {\v C}ech} %author's name without academic degrees
 \authorWithDegrees{Jakub Čech} %author's name with academic degrees
 \supervisor{Ing. Miroslav Balík, Ph.D.}
 \acknowledgements{I would like to thank myself for doing this. I am an awesome and humble person. With great power comes great responsibility and no one else is as good or worthy as I am to be thanked. Ave Kuba!}

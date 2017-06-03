@@ -23,46 +23,82 @@
 	released, the game became incredible hit. Even though the game faced many problems during
 	its launch, mainly caused by the unexpected success and more active users than Pokémon
 	GO was able to handle, in the first 80 days Pokémon GO reached about 550 millions downloads and earned about \$470 million.
-	
+		
 	The game is very similar to Ingress and uses the same crowd-sourced geographical data.
 	
 \section{Use Cases}
-
-	\subsection{Use case diagram}
-	
+	\subsection{Actors}
 		\begin{figure}[h]	
-			\includegraphics[width=\textwidth]{figures/UseCaseDiagram}
+			\includegraphics[width=\textwidth]{figures/UC_Actors}
 			\centering			
-			\caption{Use case diagram}
-			\label{fig:usecasediagram}
+			\caption{Use Cases Diagram -- Actors}
+			\label{fig:ucactors}
 		\end{figure}
+		\noindent Actor is a role played by a user or other system that interacts with the server. The most general role is \textit{Client} and anyone who accesses the server through API is considered to play either this role or any of its children. From now on, the terms client and user will be used interchangeably. Refer to Figure \ref{fig:ucactors} for the role hierarchy.
+		
+		\textit{Administrator} is a client who has privilege to create and maintain the functionality of the server. \textit{New Client} is a user who is not yet registered and probably accesses the game for the first time. \textit{Registered Client} is the default role for a user who already has a valid account but is not logged in. Lastly, \textit{Authenticated Client} has all the required privileges to play the game. This client will be refereed to as \textit{player}. The last main actor is Google API which provides the access to Google services. 		
 	
-	\subsection{Use case descriptions}
-		The following section refer to the use-cases introduced in Figure \ref{fig:usecasediagram}.
-		\begin{enumerate}
-			\item \textbf{Register account} \\
-			\item \textbf{Login to the game} \\
-			\item \textbf{Change the inventory content} \\
-			\item \textbf{Go on a quest} \\
-			\item \textbf{Fight a common monster} \\
-			\item \textbf{Respawn} \\
-			\item \textbf{Update a quest progress} \\
-			\item \textbf{Create a new quest} \\
-			\item \textbf{Edit or delete a quest} \\
-						
-		\end{enumerate}
+	\subsection{Actions}	
+		\begin{figure}[h]	
+			\includegraphics[width=\textwidth]{figures/UC_Actions}
+			\centering			
+			\caption{Use Cases Diagram -- Player's actions}
+			\label{fig:ucactions}
+		\end{figure}
+		\noindent Actions is an event triggered by player's interaction with a game object. See Figure \ref{fig:ucactions}.
+		
+		\begin{itemize}
+			\item \textbf{Equip item} \\
+			A player wants to equip an item from his inventory. The item will be assigned to a specific slot. For example the player equips a sword to his right hand.
+			
+			\item \textbf{Buy item} \\
+			A player wants to exchange gold in a shop for an item he chooses. When the purchase is finished, the player receives the item to his inventory.
+			
+			\item \textbf{Kill monster} \\
+			A player wants to kill monsters to progress in the game. If he successfully kills the monster, he is rewarded with gold and experience
+			
+			\item \textbf{Collect loot} \\
+			This action must be preceded by the \textit{Kill monster} use case. A player can choose to collect loot from the monster he killed.
+			
+			\item \textbf{Die} \\
+			This action must be preceded by the \textit{Kill monster} use case. A player who lost his fight against a monster dies and is punished with some penalty.		
+		\end{itemize}
+
+	\subsection{Authentication}
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/UC_Authentication}
+		\centering			
+		\caption{Use Cases: Client's authentication}
+		\label{fig:ucauth}
+	\end{figure}
+
+	\subsection{Miscellaneous}
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/UC_Miscellaneous}
+		\centering			
+		\caption{Use Cases: Miscellaneous}
+		\label{fig:ucmisc}
+	\end{figure}
+
+	\subsection{Administration}
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/UC_Administration}
+		\centering			
+		\caption{Use Cases: Administration}
+		\label{fig:ucadmin}
+	\end{figure}	
 	
 	
 \section{Requirements}
 
 	\subsection{Functional Requirements}
-		\subsubsection{Rules}
+		\subsubsection*{Rules}
 		\begin{enumerate}
 			\item \textbf{The server must provide API to clients} \\
 			The key requirement for the server is to allow receiving HTTP(S) requests. When processed, the server responds in JSON format.
 						
 			\item \textbf{The player's character has attributes} \\
-			The character has a set of attributes, including health, experience, level, and owned gold. The maximum health increases with level. The experience is rewarded after certain actions, e.g. after killing a monster. The gold is primary in-game currency.
+			The character has a set of attributes, including health, experience, level, and owned gold. Maximum health increases with level. The experience is rewarded after certain actions, e.g. after killing a monster. The gold is primary in-game currency.
 			  
 			\item \textbf{A player can own items} \\
 			A player has an inventory which can contain various types of items. The item can be for example sword, potion, armor etc.
@@ -98,7 +134,7 @@
 			All the player's attributes, his inventory and equipment must be stored between sessions. Player will continue from the state in which he ended.
 			
 		\end{enumerate}
-		\subsubsection{Features}
+		\subsubsection*{Features}
 		\begin{enumerate}
 			\item \textbf{A player registers and logs in the game using Google account} \\
 			For the player's convenience, a Google account is required to play. The server does not have to store or handle any password. Most of the authentication process is delegated to Google servers.
@@ -122,7 +158,7 @@
 			Gold can be exchanged for various items in shops.
 			
 			\item \textbf{A player can use an item from his inventory} \\
-			Some of the items in the game are consumables. When used, an action defined by the item is executed. For example a health potion heals the player.
+			Some items in the game are consumables. When used, an action defined by the item is executed. For example a health potion heals the player.
 			
 			\item \textbf{A player can purchase in-app product} \\
 			The application allow a user to exchange real-life currency for the in-game one. The server should verify such purchase and add the currency to his profile.
