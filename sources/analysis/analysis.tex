@@ -31,21 +31,45 @@
 		\begin{figure}[h]	
 			\includegraphics[width=\textwidth]{figures/UC_Actors}
 			\centering			
-			\caption{Use Cases Diagram -- Actors}
+			\caption{Use Case
+				 Diagram -- Actors}
 			\label{fig:ucactors}
 		\end{figure}
 		\noindent Actor is a role played by a user or other system that interacts with the server. The most general role is \textit{Client} and anyone who accesses the server through API is considered to play either this role or any of its children. From now on, the terms client and user will be used interchangeably. Refer to Figure \ref{fig:ucactors} for the role hierarchy.
 		
-		\textit{Administrator} is a client who has privilege to create and maintain the functionality of the server. \textit{New Client} is a user who is not yet registered and probably accesses the game for the first time. \textit{Registered Client} is the default role for a user who already has a valid account but is not logged in. Lastly, \textit{Authenticated Client} has all the required privileges to play the game. This client will be refereed to as \textit{player}. The last main actor is Google API which provides the access to Google services. 		
+		\textit{Administrator} is a client who has privilege to create and maintain the functionality of the game. \textit{New Client} is a user who is not yet registered and probably accesses the game for the first time. \textit{Registered Client} is the default role for a user who already has a valid account but is not logged in. Lastly, \textit{Authenticated Client} has all the required privileges to play the game. This client will be refereed to as \textit{player}. The last main actor is Google API which provides the access to Google services. 		
+
+	\subsection{Authentication}	
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/UC_Authentication}
+		\centering			
+		\caption{Use Case Diagram -- Client's authentication}
+		\label{fig:ucauth}
+	\end{figure}
+	\noindent Authentication use cases user performs to get promoted to more privileged roles. The basic transition flow is \textit{New Client} $\rightarrow$ \textit{Registered Client} $\rightarrow$ \textit{Authenticated Client}. See Figure \ref{fig:ucauth}.
+	
+	\begin{itemize}
+		\item \textbf{Register} \\
+		The only choice \textit{New Client} has is to register a new account. He uses provides his Google identity and chooses an username. After his identity is verified, the server creates a new profile and logs the user in.
+		
+		\item \textbf{Log in} \\
+		The \textit{Registered Client} must log in before he can access any of the game features. He provides his Google identity which is then verified and matched to an account. An access code is issued for the future identification within the session.		
+		
+		\item \textbf{Verify user's identity} \\
+		Proper verification is needed when the game server receives a Google identity of a user. The server contacts the \textit{Google API} which responds with user's personal information if the identity is valid.
+		
+		\item \textbf{Issue access code} \\ 
+		This use case is invoked during login process. Server issues a unique access code to the user. Only \textit{Authenticated Client} has such code.
+	\end{itemize}
 	
 	\subsection{Actions}	
 		\begin{figure}[h]	
 			\includegraphics[width=\textwidth]{figures/UC_Actions}
 			\centering			
-			\caption{Use Cases Diagram -- Player's actions}
+			\caption{Use Case Diagram -- Player's actions}
 			\label{fig:ucactions}
 		\end{figure}
-		\noindent Actions is an event triggered by player's interaction with a game object. See Figure \ref{fig:ucactions}.
+		\noindent Action is an event triggered by player's interaction with a game object. See the diagram in Figure \ref{fig:ucactions}.
 		
 		\begin{itemize}
 			\item \textbf{Equip item} \\
@@ -63,15 +87,7 @@
 			\item \textbf{Die} \\
 			This action must be preceded by the \textit{Kill monster} use case. A player who lost his fight against a monster dies and is punished with some penalty.		
 		\end{itemize}
-
-	\subsection{Authentication}
-	\begin{figure}[h]	
-		\includegraphics[width=\textwidth]{figures/UC_Authentication}
-		\centering			
-		\caption{Use Cases: Client's authentication}
-		\label{fig:ucauth}
-	\end{figure}
-
+	
 	\subsection{Miscellaneous}
 	\begin{figure}[h]	
 		\includegraphics[width=\textwidth]{figures/UC_Miscellaneous}
@@ -79,14 +95,38 @@
 		\caption{Use Cases: Miscellaneous}
 		\label{fig:ucmisc}
 	\end{figure}
+	The following use cases mainly cover requests made by client application. See the diagram in Figure \ref{fig:ucmisc}.
+	\begin{itemize}
+		\item \textbf{Get inventory}\\
+		The application requests all items the player owns. It is also possible to retrieve all the player's equipment with each item assigned to some slot.
+		
+		\item \textbf{Get profile}\\
+		A client may need to synchronize its internal state of the players profile with the server. The application is provided with complete state of the player's profile including attributes like health, gold, and experience.
+		
+		
+		\item \textbf{Get nearby locations}\\
+		This is a critical functionality of the server. A client asks for game locations near his coordinates. The server provides such locations along with their associated game objects.
+		
+		
+		\item \textbf{Purchase in-app product}\\
+		The application supports micro-transactions. Since the purchase is made client-side, the application has to notify the server about the purchase and give the bought product to the player. 
+		
+		
+		\item \textbf{Verify in-app purchase}\\
+		During the previous use case (\textit{Purchase in-app product}), the server verifies if the purchase is valid and not fake, canceled, or already accounted. The verification process contacts \textit{Google API} which confirms the validity.
+		
+		
+	\end{itemize}
+	
 
 	\subsection{Administration}
 	\begin{figure}[h]	
 		\includegraphics[width=\textwidth]{figures/UC_Administration}
 		\centering			
 		\caption{Use Cases: Administration}
-		\label{fig:ucadmin}
+		\label{fig:ucadmin}				
 	\end{figure}	
+	\noindent Since the game is not static during its lifetime, people in charge of the changes needs an easy way to add new locations and maintain game objects. These use cases are described in Figure \ref{fig:ucadmin}.
 	
 	
 \section{Requirements}
