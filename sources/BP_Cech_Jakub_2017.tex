@@ -22,8 +22,12 @@
 \usepackage[
 backend=biber,
 sortlocale=en_US,
-style=iso-authoryear
+style=iso-numeric
 ]{biblatex}
+
+\usepackage{footnote}
+\makesavenoteenv{tabular}
+\makesavenoteenv{table}
 
 \renewcommand\labelitemi{---}
 
@@ -97,8 +101,14 @@ style=iso-authoryear
 	\chapter{Acronyms}
 	% \printglossaries
 	\begin{description}
-		\item[GUI] Graphical user interface
-		\item[XML] Extensible markup language
+		\item[CS] Connection Server
+		\item[LS] Login Server
+		\item[DS] Database Server
+		\item[HTTP] Hypertext Transfer Protocol
+		\item[HTTPS] Hypertext Transfer Protocol Secure
+		\item[JSON] JavaScript Object Notation
+		\item[API] Application Programming Interface
+		\item[DBMS] Database Management System
 	\end{description}
 	
 	

@@ -113,7 +113,7 @@
 		
 		
 		\item \textbf{Verify in-app purchase}\\
-		During the previous use case (\textit{Purchase in-app product}), the server verifies if the purchase is valid and not fake, canceled, or already accounted. The verification process contacts \textit{Google API} which confirms the validity.
+		During the previous use case (\textit{Purchase in-app product}), the server verifies if the purchase is valid and not fake, canceled, or already accounted. The verification process is done through \textit{Google API}.
 		
 		
 	\end{itemize}
@@ -132,11 +132,10 @@
 \section{Requirements}
 
 	\subsection{Functional Requirements}
+	These requirements define functions of the server components.
 		\subsubsection*{Rules}
-		\begin{enumerate}
-			\item \textbf{The server must provide API to clients} \\
-			The key requirement for the server is to allow receiving HTTP(S) requests. When processed, the server responds in JSON format.
-						
+		These requirements specify the functionality not directly accessible to clients.
+		\begin{enumerate}						
 			\item \textbf{The player's character has attributes} \\
 			The character has a set of attributes, including health, experience, level, and owned gold. Maximum health increases with level. The experience is rewarded after certain actions, e.g. after killing a monster. The gold is primary in-game currency.
 			  
@@ -165,17 +164,18 @@
 			This requirement aims to help maintain the game objects efficiently by administrators. It allows creating small set of abstract game objects with predefined inventories and other attributes. 
 			
 			\item \textbf{If a player kills a monster at a location, the monster will be hidden for a period} \\
-			To prevent the player from killing the same monster continuously without a need of moving somewhere else, the location should be hidden for a certain period after the kill.
-			
-			\item \textbf{The server should provide API for administration} \\	
-			Such API will be used to manage locations, create and edit game objects or to assign a game object to some locations. It is necessary to protect the administration endpoints from unauthorized access.
+			To prevent the player from killing the same monster continuously without a need of moving somewhere else, the location should be hidden for a certain period after the kill.						
 					
 			\item \textbf{The server must persist player’s profile between sessions} \\
 			All the player's attributes, his inventory and equipment must be stored between sessions. Player will continue from the state in which he ended.
 			
 		\end{enumerate}
 		\subsubsection*{Features}
+		These requirements contain the behavior directly visible to clients.
 		\begin{enumerate}
+			\item \textbf{The server must provide API to clients} \\
+			The key requirement for the server is to allow receiving HTTP(S) requests. When processed, the server responds in JSON format.
+			
 			\item \textbf{A player registers and logs in the game using Google account} \\
 			For the player's convenience, a Google account is required to play. The server does not have to store or handle any password. Most of the authentication process is delegated to Google servers.
 			
@@ -203,43 +203,76 @@
 			\item \textbf{A player can purchase in-app product} \\
 			The application allow a user to exchange real-life currency for the in-game one. The server should verify such purchase and add the currency to his profile.
 			
+			\item \textbf{The server should provide API for administration} \\	
+			Such API will be used to manage locations, create and edit game objects or to assign a game object to some locations. It is necessary to protect the administration endpoints from unauthorized access.
+			
 		\end{enumerate}
 		
 		
-	\subsection{Non-functional}
-	
-		\begin{enumerate}
-			\item \textbf{The data layer consists of a database engine and a caching} \\
-			Game Server never accesses database directly. Data are retrieved from the database upon request and then cached. Upper layers communicate exclusively with cache.		
-			
-			\item \textbf{The server provides an API for client} \\
-			The API support at least following:
-			\begin{enumerate}
-				\item Retrieve nearby game locations
-				\item Create player
-				\item Update player's data (inventory, experience, resources, quests progress etc.)
-				\item Provide information about a quest 			
-			\end{enumerate}
+	\subsection{Non-functional Requirements}
+		These requirements specify the criteria the application must meet.
+		\begin{enumerate}	
+			\item \textbf{Database implements caching} \\
+			This application is heavy database reliant. Additional cache provides optimization for faster reads. 				
 			
 			\item \textbf{The communication between client and server parts of the application must be secure} \\
-			All data sent from and to a client has to be encrypted.
+			All data sent from and to a client has to be encrypted. This should be achieved by connecting to the server via HTTPS.
 	
-			\item \textbf{Client can only connect to a Connection Server} \\
-			Several Connection Servers exist to prevent a bottle-neck. Client selects the Connection Server by an algorithm. Client does not have an access to any other part of the server.
-		\end{enumerate}
-	\subsection{System and Interface}
-	
-		\begin{enumerate}
-			\item \textbf{System uses Java 8 SE as an execution environment} \\
+			\item \textbf{The server responsibilities are delegated to its components} \\
+			The whole server consists of three components:
+			\begin{itemize}
+				\item Connection server	(\textit{CS})							
+				\item Login server (\textit{LS})
+				\item Database server (\textit{DS})
+			\end{itemize} 			
+			Only the Connection server is accessible to clients.
 			
-			\item \textbf{Operating system for the server is Debian 8} \\
+			\item \textbf{The server components are scalable} \\
+			Each component can run many instances if itself. These instances are mutually independent.
 			
-			\item \textbf{Database engine is MySQL} \\
+			\item \textbf{The user is authenticated by Google} \\
+			A user is authenticated using \textbf{Google Play Games} on the client. The authentication is finished by verifying his ID token using \textbf{Google API Client Library}.	
 			
-			\item \textbf{Cache engine is Redis} \\
+			\item \textbf{The execution environment is Java 8}
+								
+			\item \textbf{The operating system is Debian 8}\\	
+			Thanks to the portability of Java applications, other operating systems may be supported. 													
 		\end{enumerate}
 	
 \section{Technology}
-
+	\subsection{Database Management System}
+	The database is a crucial part of the server. It handles most of the data persistence. Many commercial and open source solutions exist on market nowadays. In the following text, I will analyze three popular relational database management systems (DBMS) -- MySQL, PostgreSQL, and Oracle. For a quick comparison, see Table \ref{tab:comparedbms}.
+	
+	\begin{center}
+		\begin{table}
+			\centering
+			\begin{tabular}{p{0.215\textwidth} || p{0.215\textwidth} | p{0.215\textwidth} | p{0.215\textwidth}}
+				& \textbf{MySQL} & \textbf{Oracle} & \textbf{PostgreSQL} \\ 
+				\hline \hline
+				Rank\footnotemark & 2 & 1 & 4 \\ \hline				
+				Initial Release & 1995 & 1980 & 1989 \\ \hline
+				License & GPLv2 & Commercial & BSD \\ \hline				
+				Replication\newline methods & Master-master\newline Master-slave & Master-master\newline Master-slave & Master-slave  \\ \hline
+				SQL Support & yes & yes & yes \\ \hline
+				Foreign keys & yes & yes & yes \\ \hline
+				JDBC Support & yes & yes & yes \\ \hline
+				In-memory\newline capabilities & yes & yes & no \\ \hline				
+			\end{tabular}
+			\caption{Comparison of popular relational DBMS \cite{dbengines}}
+			\label{tab:comparedbms}
+		\end{table}		
+	\end{center}
+	\footnotetext{Description of the ranking methodology available at \url{https://db-engines.com/en/ranking_definition}}
+	
+		\subsubsection{MySQL}
+		\subsubsection{PostgreSQL}
+		\subsubsection{Oracle}
 	\subsection{Frameworks}
+	\subsubsection{Dropwizard}
+	\subsubsection{Hibernate}
+	\subsubsection{Jedis}		
+	\subsection{Cache}
+		\subsubsection{Redis}
+	\subsection{Libraries}
+		\subsubsection{Google API Libraries}
 	
