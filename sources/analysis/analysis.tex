@@ -308,8 +308,11 @@
 		\subsubsection{Google API Client Libraries}
 		A library developed by Google to help developers integrate Google API to their applications \cite{googleapilibs}. The library is included in this project to handle user authentication and to verify in-app purchases.
 		
-	\subsection{Cache}
-		\subsubsection{Redis}
-		\subsubsection{Memcached}
+	\subsection{Index and Cache}
+	Redis is an open source in-memory data structure store \cite{redis}. I chose to use Redis as the second level cache provider for Hibernate. The additional cache should result in more optimized database calls and thus performance boost.
+	
+	Since our application heavily relies on working with geo-spatial data, I decided to implement an additional index. Redis provides a native support for searching points near the selected spatial location.
+	
+	
 		
 	
