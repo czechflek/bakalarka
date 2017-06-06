@@ -1,25 +1,26 @@
-\section{Server-Client communication}
-How the data are exchanged between client and server. Will contain format, technologies and protocol specification. 
+\section{Activities}
+	\subsection{Authentication}
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/AD_Authentication}
+		\centering			
+		\caption{Activity diagram og the authentication process}
+		\label{fig:adauth}
+	\end{figure}
 
-\section{Security}
-Basic methods for verification of legitimacy of the data. How the server API will be secured.
+	\subsection{Retrieving nearby game objects}
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/AD_Location}
+		\centering			
+		\caption{Activity diagram of how the server provides nearby game objects}
+		\label{fig:adlocation}
+	\end{figure}
 
-\section{Architecture}
-Diagrams and overall architecture of the server belongs here.
-
-\section{Deployment Diagram}
-\begin{figure}[h]	
-	\includegraphics[width=\textwidth]{figures/DeploymentDiagram}
-	\centering
-	\caption{Deployment diagram for the game}
-	\label{fig:deploymentdiagram}		
-\end{figure}
 
 \section{Database Model}
 \begin{figure}[h]	
-	\includegraphics[width=\textwidth]{figures/DatabaseModel}
+	\includegraphics[width=\textwidth, trim={0 5cm 0 0}]{figures/DatabaseModel}
 	\centering
-	\caption{Diagram of the database structure implemented on the server}
+	\caption{Database model}
 	\label{fig:dbmodel}	
 \end{figure}
 %
