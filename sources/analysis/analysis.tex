@@ -50,7 +50,7 @@
 	\end{figure}
 	\noindent Authentication use cases user performs to get promoted to more privileged roles. The basic transition flow is \textit{New Client} $\rightarrow$ \textit{Registered Client} $\rightarrow$ \textit{Authenticated Client}. See Figure \ref{fig:ucauth}.
 	
-	\begin{itemize}
+	\begin{enumerate}
 		\item \textbf{Register} \\
 		The only choice \textit{New Client} has is to register a new account. He uses provides his Google identity and chooses an username. After his identity is verified, the server creates a new profile and logs the user in.
 		
@@ -62,7 +62,7 @@
 		
 		\item \textbf{Issue access code} \\ 
 		This use case is invoked during login process. Server issues a unique access code to the user. Only \textit{Authenticated Client} has such code.
-	\end{itemize}
+	\end{enumerate}
 	
 	\subsection{Actions}	
 		\begin{figure}[h]	
@@ -73,7 +73,7 @@
 		\end{figure}
 		\noindent Action is an event triggered by player's interaction with a game object. See the diagram in Figure \ref{fig:ucactions}.
 		
-		\begin{itemize}
+		\begin{enumerate}
 			\item \textbf{Equip item} \\
 			A player wants to equip an item from his inventory. The item will be assigned to a specific slot. For example the player equips a sword to his right hand.
 			
@@ -88,7 +88,7 @@
 			
 			\item \textbf{Die} \\
 			This action must be preceded by the \textit{Kill monster} use case. A player who lost his fight against a monster dies and is punished with some penalty.		
-		\end{itemize}
+		\end{enumerate}
 	
 	\subsection{Miscellaneous}
 	\begin{figure}[h]	
@@ -98,7 +98,7 @@
 		\label{fig:ucmisc}
 	\end{figure}
 	The following use cases mainly cover requests made by client application. See the diagram in Figure \ref{fig:ucmisc}.
-	\begin{itemize}
+	\begin{enumerate}
 		\item \textbf{Get inventory}\\
 		The application requests all items the player owns. It is also possible to retrieve all the player's equipment with each item assigned to some slot.
 		
@@ -118,7 +118,7 @@
 		During the previous use case (\textit{Purchase in-app product}), the server verifies if the purchase is valid and not fake, canceled, or already accounted. The verification process is done through \textit{Google API}.
 		
 		
-	\end{itemize}
+	\end{enumerate}
 	
 
 	\subsection{Administration}
@@ -132,6 +132,8 @@
 	
 	
 \section{Requirements}
+\label{section:requirements}
+After several discussions with my colleague, we agreed on the following requirements.
 
 	\subsection{Functional Requirements}
 	These requirements define functions of the server components.
@@ -233,7 +235,7 @@
 			Each component can run many instances if itself. These instances are mutually independent.
 			
 			\item \textbf{The user is authenticated by Google} \\
-			A user is authenticated using \textbf{Google Play Games} on the client. The authentication is finished by verifying his ID token using \textbf{Google API Client Library}.	
+			A user is authenticated using \textbf{Google Play Games} \cite{gplaygames} on the client. The authentication is finished by verifying his ID token using \textbf{Google API Client Library}.	
 			
 			\item \textbf{The execution environment is Java 8}
 								
@@ -296,14 +298,14 @@
 	
 		\subsubsection{Dropwizard}
 		Dropwizard \cite{dropwizard} glues together many mature libraries which helps with developing a powerful web-application. The libaries most useful for this project include:
-		\begin{itemize}
-			\item \textbf{Jetty}\\
-			Powerful open source web server. Jetty is flexible and extensible. It is a lightweight server with small footprint \cite{jetty}.
-			\item \textbf{Jersey}\\
-			Jersey RESTful Web Services framework is open source framework for developing RESTful Web Services in Java. It supports JAX-RS\footnote{Specification of JAX-RS is available at \url{https://jcp.org/en/jsr/detail?id=311}} APIs \cite{jersey}.
-			\item \textbf{Jackson}\\
-			Jackson is a JSON parser and generator. It supports a conversion from JSON to Plain Old Java Object (POJO) and vice versa.			
-		\end{itemize}
+		\begin{description}
+			\item [Jetty] \hfill \\
+				Powerful open source web server. Jetty is flexible and extensible. It is a lightweight server with small footprint \cite{jetty}.
+			\item [Jersey] \hfill \\
+				An open source framework for developing RESTful Web Services in Java. It supports JAX-RS\footnote{Specification of JAX-RS is available at \url{https://jcp.org/en/jsr/detail?id=311}} APIs \cite{jersey}.
+			\item [Jackson] \hfill \\
+				A JSON parser and generator. It supports a conversion from JSON to Plain Old Java Object (POJO) and vice versa \cite{jackson}.			
+		\end{description}
 		\subsubsection{Hibernate ORM}
 		Hibernate ORM enables to more easily develop applications whose data outlives the application process. It is an Object/Relational Mapping framework and handles data persistence as it applies to relational database. Hibernate supports many powerful features like lazy initialization and numerous fetching strategies. It requires not special database tables and much of the SQL is generated at system initialization \cite{hibernate}.
 		
