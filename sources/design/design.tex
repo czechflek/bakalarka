@@ -8,13 +8,13 @@ The~game server is divided into separate components. Many instances of a~compone
 	\label{fig:components}
 \end{figure}
 
-	\subsection{Connection server}
+	\subsection{Connection Server}
 	This is the~public entry point and the~only component exposed to clients. Reducing the~number of publicly accessible components increases security of the~server. CS handles all incoming traffic and delegates work to other components. 
 	
-	\subsection{Login server}
+	\subsection{Login Server}
 	The~main responsibility of the~LS is to handle user authentication and authorization. It connects to Redis where users' access codes are stored. The~LS is also used for in-app purchase verification. The~component is connected to Google API.
 	
-	\subsection{Database server}
+	\subsection{Database Server}
 	The~most important component is Database server. Most of the~game logic happens here. Since the~DS is responsible for data~persistence, it is connected to MySQL and Redis.
 
 \section{Activities}
@@ -28,7 +28,7 @@ The~game server is divided into separate components. Many instances of a~compone
 		\label{fig:adauth}
 	\end{figure}
 
-		\subsubsection{Access code}
+		\subsubsection{Access Code}
 		A~client is identified by his access code during a~session. The~code is random and unique. It is generated each time the~client finishes login process; the~old code,  previously issued to the~user, is invalidated.
 		
 		\subsubsection{Registration}
@@ -37,28 +37,28 @@ The~game server is divided into separate components. Many instances of a~compone
 		\subsubsection{Login}
 		A~registered user can simply login using only his ID Token, which is provided to client during login process by Google Play Games. LS exchanges the~token for UID which is then used to retrieve user's profile. Client is issued an access code and the~authentication process is completed.
 	
-	\subsection{Killing a~monster}
+	\subsection{Killing a~Monster}
 	A user decides to fight a \textit{monster}. In this prototype, the client iteratively deals damage to the user and the \textit{monster}. The damage is calculated as \textit{attackDamage} attribute multiplied by a random value 0.5-1.5. If \textit{health} of the \textit{monster} drops to below zero before the user's one does, the \textit{monster} is killed. Server is notified of the result and rewards the user with \textit{gold} and \textit{experience}. The kill is logged, the \textit{monster} is removed from the game map and the client is provided with a one-time \textit{killConfirmationCode} which allows him to collect loot from the \textit{monster}.
 		
-	\subsection{Killing a~user}
+	\subsection{Killing a~User}
 	If user's \textit{health} drops to or below before the \textit{monster}'s one, the user dies. Client notifies the server of user's death. His \textit{health} is fully restored and he's punished with \textit{deathPenalty} which is deducted from his gold:  \[ deathPenalty = 200 + 100 * (userLevel - 1) \]
 	
-	\subsection{Collecting loot after kill}
+	\subsection{Collecting Loot after Kill}
 	User is presented with an option to collect loot from a \textit{monster} he killed. Clients sends a \textit{killConfirmationCode} along with a list of items, he wants to collect, to the server. DS consumes the \textit{killConfirmationCode} and adds the selected items to user's inventory. Client then receives the updated inventory.
 	
-	\subsection{Buying an item}
+	\subsection{Buying an Item}
 	Client shows its user a \textit{shop} and lets him choose what item he wants to buy. The selected item is sent to the server. DS verifies the item is in the specified \textit{shop}. Price of the item is then deducted from user's account and the item is added to his inventory. If the user does not have enough \textit{gold}, the purchase is rejected and an error message is returned. Otherwise, client receives updated user's inventory.
 	
-	\subsection{Equipping an item}
+	\subsection{Equipping an Item}
 	User selects a \textit{slot} and an appropriate item from his inventory. The client sends the item along with the slot to the server. DS checks if the item-slot pair is correct and assigns the item to the \textit{slot}. The successful result is then confirmed to the client.
 	
-	\subsection{Using an item}
+	\subsection{Using an Item}
 	User selects a usable item from his inventory. Client sends the selected item to the server. DS decides what the item does by looking at attributes \textit{addHealth}, \textit{addExperience}, and \textit{addGold}. Based o the values set for the item, health, experience, and/or gold is added to user's account. The updated profile is then sent back to the client.
 		
-	\subsection{Purchasing in-app product}
+	\subsection{Purchasing In-app Product}
 	In-app purchases are handled on client which performs the transaction using a Google service. The prototype currently supports only buying \textit{gold}. If the transaction is successful, client sends a Google's \textit{Purchase token} to the server. LS verifies the status of the purchase using \textbf{Android Publisher API} \cite{androidpublisher} and adds the \textit{gold} to user's account. The purchase is then confirmed to the client.
 
-	\subsection{Retrieving nearby game objects}
+	\subsection{Retrieving Nearby Game Objects}
 	Client visualizes nearby \textit{game objects} on the map. Since the user moves, the client frequently retrieves new \textit{game objects} based on the actual location, making high demands on the speed of the retrieval process.
 	
 	\begin{figure}[h]	
@@ -108,36 +108,36 @@ The~game server is divided into separate components. Many instances of a~compone
 \section{Administration}
 The \textit{Database server} supports several API endpoints through which authorized administrators can manage the game data. The \textit{Admin} section is protected using \textbf{HTTP Basic Authentication} and thus the administrator has to know a valid username-password combination. For prototyping purposes, I've decided to provide only basic functionality for the administration.
 
-	\subsection{Game object type management}
+	\subsection{Game Object Type Management}
 	Administrator can create new \textit{game object types} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObjectType}}. A unique \textit{name} has to be specified for the new type. Optionally, the type can include a \textit{description}, a set of allowed \textit{actions} and \textit{attributes}.
 	
 	Existing \textit{game object types} can be updated. It is possible to change all their properties like \textit{name} and \textit{description}. Administrator can also add new \textit{attributes} and \textit{actions}. This is done using PUT request to the endpoint \mbox{\textit{/admin/gameObjectType}}
 		
 	All existing \textit{game object types} can be retrieved along with their \textit{actions} and \textit{attributes} by sending a GET request to the endpoint \mbox{\textit{/admin/gameObjectType}}
 	
-	\subsection{Game object management}
+	\subsection{Game Object Management}
 	Administrator can create new \textit{game objects} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObject}}. \textit{Game object type} have to be specified for the new \textit{game object}. Optionally, the new object can have a set of children which can be later updated by calling PUT \mbox{\textit{/admin/gameObject}}.
 	
 	All existing \textit{game objects} can be retrieved along with their children by sending a GET request to the endpoint \mbox{\textit{/admin/gameObject}}
 	
-	\subsection{Location import}
+	\subsection{Location Import}
 	New locations can be imported from a file in OSM XML \cite{osmxml}. Administrator can do so be sending a POST request to \mbox{\textit{/admin/importLocations}}. The file is parsed for latitude and longitude data nad the new locations are inserted into the database.
 	
-	\subsection{Game object to a location assignment}
+	\subsection{Game Object To a Location Assignment}
 	A location serves no purpose without a\textit{game object} assigned to it. This can be achieved by using PUT endpoint \mbox{\textit{/admin/assignGameObjectToLocation}}.
 	
-	\subsection{Cache clearing}
+	\subsection{Cache Clearing}
 	During the development process, developers might need to change game data by accessing the database directly. Since Hibernate won't be aware of such changes, its cache must be cleared via DELETE endpoint\mbox{\textit{/admin/clearCache}}.
 
 \section{Calculations}
-	\subsection{User's level}
+	\subsection{User's Level}
 	\[ level = \left\lfloor{\left(\frac{xp}{1024}\right)^{0.62} + 1}\right\rfloor, \]
 	where $xp$ is user's experience.
-	\subsection{Maximum health}
+	\subsection{Maximum Health}
 	Player's cannot exceed a certain value which linearly scales with his level.
 	\[ maxHealth = 200 + 50 * (userLevel - 1) \]
 	
-	\subsection{Death penalty}
+	\subsection{Death Penalty}
 	A player is punished by losing gold when he dies. The total amount of the lost gold scales with user's level.
 	\[ deathPenalty = 200 + 100 * (userLevel - 1) \]
 

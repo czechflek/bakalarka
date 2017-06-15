@@ -1,4 +1,4 @@
-\NeedsTeXFormat{LaTeX2e}
+%\NeedsTeXFormat{LaTeX2e}
 \ProvidesClass{FITthesis}[2013/05/06 CTU FIT standard class for theses]
 
 % created by Ondrej Guth <ondrej.guth@fit.cvut.cz>

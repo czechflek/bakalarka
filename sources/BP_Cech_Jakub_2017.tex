@@ -7,13 +7,14 @@
 
 \documentclass[thesis=B,english]{FITthesis}[2012/10/20]
 
-\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
+%\usepackage[utf8]{inputenc} % LaTeX source encoded as UTF-8
 % \usepackage[latin2]{inputenc} % LaTeX source encoded as ISO-8859-2
 % \usepackage[cp1250]{inputenc} % LaTeX source encoded as Windows-1250
 \usepackage{url}
 \usepackage{pdfpages}
 \usepackage{float}
 \usepackage{graphicx} %graphics files inclusion
+\usepackage{fontspec}
 % \usepackage{subfig} %subfigures
 % \usepackage{amsmath} %advanced maths
 % \usepackage{amssymb} %additional math symbols
@@ -45,16 +46,16 @@ style=iso-numeric
 \department{Department of Software Engineering}
 \title{Location-based Role Playing Game}
 \authorGN{Jakub} %author's given name/names
-\authorFN{{\v C}ech} %author's surname
-\author{Jakub {\v C}ech} %author's name without academic degrees
+\authorFN{Čech} %author's surname
+\author{Jakub Čech} %author's name without academic degrees
 \authorWithDegrees{Jakub Čech} %author's name with academic degrees
 \supervisor{Ing. Miroslav Balík, Ph.D.}
-\acknowledgements{I would like to thank myself for doing this. I am an awesome and humble person. With great power comes great responsibility and no one else is as good or worthy as I am to be thanked. Ave Kuba!}
-\abstractEN{Place the 2 cups of crushed ice into a cocktail shaker. Pour the rum, lime juice, and simple syrup over the ice, cover, and shake well. Remove the ice from your serving glass and strain the drink into it. Serve immediately.}
-\abstractCS{Hvězdy jsou krásné, protože je na nich květina, kterou není vidět. Poušť je krásná právě tím, že někde skrývá studnu. Ať je to dům, hvězdy nebo poušť, to, co je dělá krásnými, je neviditelné!}
+\acknowledgements{\textbf{TODO} I would like to thank myself for doing this. I am an awesome and humble person. With great power comes great responsibility and no one else is as good or worthy as I am to be thanked. Ave Kuba!}
+\abstractEN{\textbf{TODO} Place the 2 cups of crushed ice into a cocktail shaker. Pour the rum, lime juice, and simple syrup over the ice, cover, and shake well. Remove the ice from your serving glass and strain the drink into it. Serve immediately.}
+\abstractCS{\textbf{TODO} Hvězdy jsou krásné, protože je na nich květina, kterou není vidět. Poušť je krásná právě tím, že někde skrývá studnu. Ať je to dům, hvězdy nebo poušť, to, co je dělá krásnými, je neviditelné!}
 \placeForDeclarationOfAuthenticity{Prague}
-\keywordsCS{\#deep, \#thoughtoftheday, \#follow4follow}
-\keywordsEN{Daiquiri, Coctail, Rum, Cuba}
+\keywordsCS{\textbf{TODO} \#deep, \#thoughtoftheday, \#follow4follow}
+\keywordsEN{\textbf{TODO} Daiquiri, Coctail, Rum, Cuba}
 \declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
 
 
@@ -65,12 +66,14 @@ style=iso-numeric
 	
 	\setsecnumdepth{part}
 	\chapter{Introduction}
-	\input{intro/intro}
+	\input{intro/intro}	
 	
-	
-	\setsecnumdepth{all}	
-	\chapter{Project overview}
-	\input{overview/overview}
+	\setsecnumdepth{all}
+	\chapter{Goals of the Thesis}
+	\input{goals/goals}
+		
+	\chapter{Game Description}
+	\input{description/description}
 	
 	\chapter{Analysis}
 	\input{analysis/analysis}
@@ -78,19 +81,15 @@ style=iso-numeric
 	\chapter{Design}
 	\input{design/design}
 	
-	\chapter{Geo-data mining}
-	\input{mining/mining}
-	
 	\chapter{Implementation}
 	\input{implementation/implementation}
 	
 	\chapter{Testing}
 	\input{testing/testing}
 	
-	
 	\setsecnumdepth{part}
 	\chapter{Conclusion}
-	
+	\input{conclusion/conclusion}
 	
 	\printbibliography
 	
@@ -119,6 +118,9 @@ style=iso-numeric
 	
 	\chapter{API}
 	\label{appendix:api}
+	
+	\chapter{Class Diagrams}
+	\label{appendix:classdiagrams}
 	
 	\chapter{Contents of enclosed CD}
 	

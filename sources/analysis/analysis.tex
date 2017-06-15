@@ -1,5 +1,5 @@
 
-\section{Existing games}
+\section{Existing Games}
 
 	\subsection{Parallel Kingdom}
 	The game was developed by PerBlue and released in October 2008. Parallel Kingdom is the most similar game to ours.
@@ -136,6 +136,7 @@
 After several discussions with my colleague, we agreed on the following requirements.
 
 	\subsection{Functional Requirements}
+	\label{section:fr}
 	These requirements define functions of the server components.
 		\subsubsection*{Rules}
 		These requirements specify the functionality not directly accessible to clients.
@@ -240,7 +241,7 @@ After several discussions with my colleague, we agreed on the following requirem
 			\item \textbf{The execution environment is Java 8}
 								
 			\item \textbf{The operating system is Debian 8}\\	
-			Thanks to the portability of Java applications, other operating systems may be supported. 													
+			Thanks to the portability of Java applications, other operating systems may be supported. 														
 		\end{enumerate}
 	
 \section{Technology}
@@ -288,11 +289,11 @@ After several discussions with my colleague, we agreed on the following requirem
 		
 		The main disadvantages: ill-suited for read-heavy application, poor replication.
 				
-		\subsubsection{Chosen solution}
+		\subsubsection{Chosen Solution}
 		All the presented solutions are similar and are well-supported by Java frameworks. I chose MySQL 5.7 Community Edition to be the database system for this server. I have good experience with MySQL environment and the cost of game development can be lower thanks to the free Community Edition. 
 		
 	\subsection{Frameworks and Libraries}
-	Frameworks provide developer with a powerful tool boc. The tools in this box help in many different areas of application developement. They provide essential design patterns and structure to the development project and also provide the backbone and container for the components to operate within \cite{frameworks}.
+	Frameworks provide developer with a powerful tool-box. The tools in this box help in many areas of application development. They provide essential design patterns and structure to the development project and also provide the backbone and container for the components to operate within \cite{frameworks}.
 	
 	I chose to use a Java framework which provide a support for Representational State Transfer (REST) API. Furthermore, I added an Object/Relational Mapping (ORM) framework which helps me to interconnect Java application and MySQL server.
 	
