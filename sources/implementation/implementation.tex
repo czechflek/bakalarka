@@ -1,1 +1,93 @@
-Implementation-specific aspects of the game. Will include a description interesting parts of the server.
+\section{Development Environment}
+I chose to use IntelliJ IDEA Ultimate 2017 \cite{idea} as my IDE. It is very user-friendly and powerful tool, which packs almost everything needed to develop a Java application. Build management is handled by Apache Maven \cite{maven}. This tool is extremely useful as it takes care of all application's dependencies and completely manages the build process. 
+
+\section{Game Locations Source}
+I have obtained all game locations from open-source project OpenStreetMaps (OSM) \cite{osm}. I downloaded complete map data of the Czech Republic. All features in OSM have one or more tags which specify a type of the feature, for example \textit{amenity.college} is a college or a campus building, \textit{historic.castle} is a castle and so on. Since it would be unreasonable to use all available features\footnote{The list of the feature types is available at \url{http://wiki.openstreetmap.org/wiki/Map_Features}}, I chose only several types, mostly from categories \textit{amenity} and \textit{historic}. I used a tool \textit{Osmosis} \cite{osmosis} to extract selected map features from the data. The selection resulted in 99~037 locations for the entire Czech Republic.
+
+\section{Database}
+The initial database structure was created from the database model in Figure \ref{fig:dbmodel}. I used MySQL Workbench \cite{mysqlworkbench} to generate a creation script.
+
+The database includes an event which is triggered every 8 hours and wipes a table containing list of monsters killed by users. It causes the monsters to "re-spawn".  
+
+\section{Project Structure}
+The entire project is organized by its components (also called \textit{modules} in the IDEA's terminology). The project name is \textit{BachelorsServer} and consists of three modules -- \textit{ConnectionServer}, \textit{LoginServer}, and \textit{DatabaseServer}. Each module follows Maven's Standard Directory Layout\footnote{Described at \url{https://maven.apache.org/guides/introduction/introduction-to-the-standard-directory-layout.html}}. Top-level directory contains important configuration file. First one is \textit{config.yml} which stores server setting, such as listening ports, used protocol (HTTP/HTTPS), or URLs of other components. Path to this file must be specified as run argument of the server. Second file is \textit{pom.xml} (\textit{Project Object Model} file). It contains project-specific definitions for Maven. It specifies project version and name, its dependencies, and build strategies. 
+
+Common package organization is\footnote{The package name \textit{module} is used as a placeholder for module-specific name.}:
+\begin{description}
+	\item[bachelors.\textit{module}] Main class and server configuration classes.
+	\item[bachelors.\textit{module}.api] Classes used for JSON serialization and deserialization.
+	\item[bachelors.\textit{module}.resources] Definitions of API endpoints.
+\end{description}
+
+\section{Connection Server}
+A component which mostly serves as a proxy. It's implementation should be effective, since every client must connect to this component. Connection Server is the least complex module of the three. To satisfy the requirement for secured communication, this component allows incoming connection only using HTTPS.  
+
+\subsection{Resources}
+Classes which handle API requests. I described their main responsibilities and examples of their usage in the following text.
+
+\begin{description}	
+	\item[BaseResource] Abstract super-class for all resources. It contains commonly used methods, such as \textit{putRequest()}, or \textit{getRequest()}. These methods verify client's access code and delegates the request to a supplied URL.
+	
+	\item[UserResource] The class handles user-oriented requests. It is used to get user's profile, or his inventory.
+	
+	\item[LoginResource] The resource handles login and registration requests.
+	
+	\item[LocationResource] It is responsible for retrieving nearby game locations.
+	
+	\item[PurchaseResource] It is responsible for in-app purchases.
+
+	\item[ActionResource] Important resource which processes user's action. It is used to kill a monster, to buy an item from a shop, or to use a health potion.
+\end{description}
+
+\section{Login Server}
+A component responsible for authentication and authorization of clients and in-app purchase verification. I introduced several dependencies to help me fulfill the requirements.
+ 
+\subsection{Access Key Store}
+All client's requests after login are authorized using an \textit{access code}. The storage for these codes has to be fast, reliable and shared among all instances of Login Server component. The codes are stored in Redis and accessed from the component using a Redis java client -- Jedis \cite{jedis}. 
+
+\subsection{Google API}
+During the authentication process user sends a Google ID token. The component uses a Google API Client library \cite{googleapilibs} to access the API and exchange the token for user ID and e-mail. Similar process is the in-app purchase verification. The task is done using Google Play Developer API Client Library for Java  \cite{androidpublisherlibary}.
+
+\section{Database Server}
+The most complex and important component of the three. It is responsible for game logic and data persistence.
+
+\subsection{Configuration Files}
+A folder \textit{DatabaseServer/src/main/resources} contains configuration files for various dependencies of Database Server.
+\begin{description}
+	\item[hibernate.cfg.xml] Hibernate's configuraton. It defines second-level cache settings, type of the database engine, and lists database entities.
+	\item[hibernate-redis.properties] Setup of Hibernate's second-level cache provider.
+	\item[logback.xml] Setting of logger. Specifies what log level to show and where to output the logs.
+	\item[redisson.yml] Configuration for Redisson which describes Redis server connection settings. 
+\end{description}
+
+\subsection{Hibernate}
+The component uses Hibernate to access the database.
+
+\subsubsection{Entities}
+Every table in the database (except decomposed Many-to-Many relationships) has to be defined in an entity class. The specification contains not only table columns but also other entities in relationship with the class. It means the developer can for example simply call \textit{getGameObjectType()} on \textit{GameObjectEntity} and Hibernate automatically fetches associated \textit{GameObjectType} from the database.
+
+\subsubsection{Second-level cache}
+I've decided to use a second-level cache to optimize database interactions. Hibernate supports many cache providers and I chose to use hibernate-redis \cite{hibernateredis}. When the cache is configured, each entity can be annotated as \textit{@Cacheable} and have caching strategy specified. Hibernate then automatically caches the annotated entities.
+
+\subsection{Models}
+Package \textit{bachelors.database.db} contains model in which database operations are implemented. Each model extends abstract super-class \textit{BaseModel} and operates in its logical scope, e.g. \textit{UserModel} handles User-related operations, \textit{GamObjectObjectModel} handles GameObject-related operations and so on. The \textit{BaseModel} implements generic methods for simple database operations, like select all objects, or get object by id. Please refer to class diagram in Figure XXX or to project documentation for more detailed information about models.
+
+\subsection{HTTP Basic Authentication} 
+\textit{Admin} endpoints require a user to authenticate. Database Server use Dropwizard's authentication support. Only three additional files are needed to implement HTTP Basic Authentication. They are all located in package \textit{bachelors.database.security}. 
+\begin{description}
+	\item[AdminUser] Type of the user which extends \textit{java.security.Principal}.
+	\item[AdminAuthenticator] The file defines how the application verifies user's username and password.
+	\item[AdminAuthorizer] A method to verify if the user has sufficient privileges to access the requested resource.
+\end{description}
+
+\section{Deployment Environment}
+\label{section:deploy}
+The prototype currently runs on a virtual private server provided by WEDOS internet, a.s. The server runs on Debian~8. It uses the lowest available server specification\footnote{Offered server \url{https://hosting.wedos.com/cs/virtualni-servery.html}}:
+\begin{tabbing}
+	\textit{CPU} ~~ \= 1 thread Xeon 1.80 GHz\\
+	\textit{RAM} \> 2 GB\\
+	\textit{SSD} \> 15 GB\\
+	\textit{SLA} \> 99.99\%
+\end{tabbing}
+
+The specifications are sufficient for testing and prototyping but in unused state, the server has only about 200~MB free RAM. Additionally, the application will have to support many concurrent users which requires more CPU threads.  

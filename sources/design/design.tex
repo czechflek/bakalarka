@@ -59,7 +59,7 @@ The~game server is divided into separate components. Many instances of a~compone
 	In-app purchases are handled on client which performs the transaction using a Google service. The prototype currently supports only buying \textit{gold}. If the transaction is successful, client sends a Google's \textit{Purchase token} to the server. LS verifies the status of the purchase using \textbf{Android Publisher API} \cite{androidpublisher} and adds the \textit{gold} to user's account. The purchase is then confirmed to the client.
 
 	\subsection{Retrieving nearby game objects}
-	Client visualizes nearby game objects on the map. Since the user moves, the client frequently retrieves new game objects based on the actual location, making high demands on the speed of the retrieval process.
+	Client visualizes nearby \textit{game objects} on the map. Since the user moves, the client frequently retrieves new \textit{game objects} based on the actual location, making high demands on the speed of the retrieval process.
 	
 	\begin{figure}[h]	
 		\includegraphics[width=\textwidth]{figures/AD_Location}
@@ -71,98 +71,193 @@ The~game server is divided into separate components. Many instances of a~compone
 	Client sends its coordinates to the server. DS queries Redis which contains an index of all available \textit{locations}. The index responds with IDs of \textit{locations} in 200 m radius from the provided coordinates. The \textit{locations} and their assigned \textit{game objects} are then retrieved from the database. Server excludes already killed \textit{monsters}. The list of \textit{locations} and their \textit{game objects} is sent to the client which presents them on the map. See an activity diagram of the described process in Figure~\ref{fig:adlocation}.		
 
 \section{Database Model}
-	The database was designed to comply with the requirements specified in section \ref{section:requirements}.
-	\begin{description}
-		\item[user]
-		\item[user\_inventory]
-		\item[user\_equipment]
-		\item[game\_object\_type]
-		\item[action]
-		\item[game\_object\_type\_attribute]
-		\item[game\_object]
-		\item[game\_object\_content]
-		\item[location]
-		\item[action\_log]
-		\item[user\_exclude\_location]
-	\end{description}
-
+	The database was designed to comply with the requirements specified in section \ref{section:requirements}. The entire database model is shown in Figure \ref{fig:dbmodel}. In the following text, I will describe important tables.	
+	
 	\begin{figure}[h]	
 		\includegraphics[width=\textwidth]{figures/DatabaseModel}
 		\centering
 		\caption{Database model}
 		\label{fig:dbmodel}	
 	\end{figure}
+	
+	\begin{description}
+		\item[user] User's profile. It contains \textit{e-mail}, \textit{UID}, and \textit{username}. Quality attributes of the profile are also stored here - current \textit{health}, \textit{experience}, and \textit{gold}.
+		
+		\item[user\_inventory] Items a user own. 
+		
+		\item[user\_equipment] Information about what items a user has equipped. Is in 1:1 relationship with \textit{user}. Each column represents an equipment \textit{slot}. When an item is equipped, the item's entry from \textit{user\_inventory} to its \textit{slot}.
+		
+		\item[game\_object\_type] A "recipe" for every object in the game. Name and description of an object is stored here. The \textit{game\_object\_type} has linked attributes and actions.
+	
+		\item[action] Defines all allowed \textit{actions}. Each \textit{game object type} implements their subset.
+		
+		\item[game\_object\_type\_attribute] Defines all \textit{attributes} of a \textit{game object}. The attribute is identified by its \textit{name} and can have a \textit{value}.
+	
+		\item[game\_object] An implementation of \textit{game object type} which can be assigned to a \textit{location}.
+	
+		\item[game\_object\_content] Inventory of a \textit{game object}
+	
+		\item[location] Predefined real-world locations. Each one must have \textit{latitude} and \textit{longitude} defined; \textit{location} can have a \textit{game object} assigned. 
+	
+		\item[action\_log] Log of user's actions. In prototype, it is used only for kills to allow collecting loot.
+
+		\item[user\_exclude\_location] Locations at which a user killed a monster. The table is periodically flushed. 
+		
+	\end{description}
 
 \section{Administration}
+The \textit{Database server} supports several API endpoints through which authorized administrators can manage the game data. The \textit{Admin} section is protected using \textbf{HTTP Basic Authentication} and thus the administrator has to know a valid username-password combination. For prototyping purposes, I've decided to provide only basic functionality for the administration.
+
+	\subsection{Game object type management}
+	Administrator can create new \textit{game object types} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObjectType}}. A unique \textit{name} has to be specified for the new type. Optionally, the type can include a \textit{description}, a set of allowed \textit{actions} and \textit{attributes}.
+	
+	Existing \textit{game object types} can be updated. It is possible to change all their properties like \textit{name} and \textit{description}. Administrator can also add new \textit{attributes} and \textit{actions}. This is done using PUT request to the endpoint \mbox{\textit{/admin/gameObjectType}}
+		
+	All existing \textit{game object types} can be retrieved along with their \textit{actions} and \textit{attributes} by sending a GET request to the endpoint \mbox{\textit{/admin/gameObjectType}}
+	
+	\subsection{Game object management}
+	Administrator can create new \textit{game objects} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObject}}. \textit{Game object type} have to be specified for the new \textit{game object}. Optionally, the new object can have a set of children which can be later updated by calling PUT \mbox{\textit{/admin/gameObject}}.
+	
+	All existing \textit{game objects} can be retrieved along with their children by sending a GET request to the endpoint \mbox{\textit{/admin/gameObject}}
+	
+	\subsection{Location import}
+	New locations can be imported from a file in OSM XML \cite{osmxml}. Administrator can do so be sending a POST request to \mbox{\textit{/admin/importLocations}}. The file is parsed for latitude and longitude data nad the new locations are inserted into the database.
+	
+	\subsection{Game object to a location assignment}
+	A location serves no purpose without a\textit{game object} assigned to it. This can be achieved by using PUT endpoint \mbox{\textit{/admin/assignGameObjectToLocation}}.
+	
+	\subsection{Cache clearing}
+	During the development process, developers might need to change game data by accessing the database directly. Since Hibernate won't be aware of such changes, its cache must be cleared via DELETE endpoint\mbox{\textit{/admin/clearCache}}.
 
 \section{Calculations}
 	\subsection{User's level}
+	\[ level = \left\lfloor{\left(\frac{xp}{1024}\right)^{0.62} + 1}\right\rfloor, \]
+	where $xp$ is user's experience.
 	\subsection{Maximum health}
+	Player's cannot exceed a certain value which linearly scales with his level.
+	\[ maxHealth = 200 + 50 * (userLevel - 1) \]
+	
 	\subsection{Death penalty}
+	A player is punished by losing gold when he dies. The total amount of the lost gold scales with user's level.
+	\[ deathPenalty = 200 + 100 * (userLevel - 1) \]
 
 \section{Public API}
-Even though every component has its own API, only the~Connection Server API is available to clients. 
+Even though every component has its own API, only the~Connection Server API is available to clients. HTTP methods correspond to REST principles.
 
 The~public API for the~prototype has been specified in cooperation with my colleague Tomáš Zahálka. Below are shortly described selected endpoints. For the~full list of publicly available API enpoints, please refer to Appendix~\ref{appendix:api}. The~mentioned appendix also contains description of API provided by LS and DS. 	
 
-\subsection{GET /login}
-The~Login endpoint verifies the~Google ID token and generates an~\textit{Access Code} for future requests. When successfully authenticated, the~player's profile and the~\textit{Access Code} are returned.
-\subsubsection*{Parameters}
-\begin{description}
-	\item[token] the~\textit{Google ID token}
-\end{description}
-\subsubsection*{Response}
-\begin{description}
-	\item[200] Successfully logged in, player's profile and the~\textit{Access Code} are returned.
-	\item[403] Invalid token.
-	\item[404] User not found, registration needed.
+\subsection{GET /login}
+
+The~Login endpoint verifies the~Google ID token and generates an~\textit{Access Code} for identification. When successfully authenticated, the~user's profile and the~\textit{Access Code} are returned.
+
+\subsubsection*{Parameters}
+
+\begin{description}
+
+	\item[token] the~\textit{Google ID token}
+
 \end{description}
 
-\subsection{POST /purchase}
-The~Purchase endpoint offers support for in-app purchases. The~purchase is verified and then assigned to the~player. To be accepted, it cannot be cancelled or consumed.
-\subsubsection*{Parameters}
-\begin{description}
-	\item[accessCode] the~\textit{Access Code}
-	\item[productId] the~id of the~product to buy
-	\item[token] the~purchase token
-\end{description}
-\subsubsection*{Response}
-\begin{description}
-	\item[200] Player's profile.
-	\item[400] Invalid data.
-	\item[403] Invalid \textit{Access Code} or the~purchase is not valid.
-	\item[404] User not found, registration needed.
-	\item[500] Unexpected error.
+\subsubsection*{Response}
+
+\begin{description}
+
+	\item[200] Successfully logged in, player's profile and the~\textit{Access Code} are returned.
+
+	\item[403] Invalid token.
+
+	\item[404] User not found, registration needed.
+
 \end{description}
 
-\subsection{GET /location}
-This retrieves all nearby locations in a~200~m radius from the~provided coordinates. The~locations are returned along with their associated objects.
-\subsubsection*{Parameters}
-\begin{description}
-	\item[lat] the~latitude
-	\item[lon] the~longitude
-	\item[accessCode] the~\textit{Access Code}
-\end{description}
-\subsubsection*{Response}
-\begin{description}
-	\item[200] List of nearby locations with game objects assigned to them.
-	\item[500] Unexpected error.
+\subsection{POST /purchase}
+
+The~Purchase endpoint offers support for in-app purchases. The~purchase is verified and then assigned to the~player. To be accepted, it cannot be cancelled or consumed.
+
+\subsubsection*{Parameters}
+
+\begin{description}
+
+	\item[accessCode] the~\textit{Access Code}
+
+	\item[productId] the~id of the~product to buy
+
+	\item[token] the~purchase token
+
 \end{description}
 
-\subsection{POST /action/kill}
-The~kill action is performed on the~selected object and location. The~location is temporarily excluded from future requests to /location. The~player's health is updated, experience and gold are added. It returns a~\textit{killConfirmedCode} which is needed to perform the~collect action.
-\subsubsection*{Parameters}
-\begin{description}
-	\item[accessCode] the~\textit{Access Code}
-	\item[locationid] the~id of the~location
-	\item[gameObjectId] the~id of the~game object
-	\item[health] the~new player's health
-\end{description}
-\subsubsection*{Response}
-\begin{description}
-	\item[200] One-time code for kill confirmation.
-	\item[400] Invalid data.
-	\item[403] Invalid \textit{Access Code}.
-	\item[404] User not found, registration needed.
-	\item[500] Unexpected error.
+\subsubsection*{Response}
+
+\begin{description}
+
+	\item[200] Player's profile.
+
+	\item[400] Invalid data.
+
+	\item[403] Invalid \textit{Access Code} or the~purchase is not valid.
+
+	\item[404] User not found, registration needed.
+
+	\item[500] Unexpected error.
+
+\end{description}
+
+\subsection{GET /location}
+
+This retrieves all nearby locations in a~200~m radius from the~provided coordinates. The~locations are returned along with their associated objects.
+
+\subsubsection*{Parameters}
+
+\begin{description}
+
+	\item[lat] the~latitude
+
+	\item[lon] the~longitude
+
+	\item[accessCode] the~\textit{Access Code}
+
+\end{description}
+
+\subsubsection*{Response}
+
+\begin{description}
+
+	\item[200] List of nearby locations with game objects assigned to them.
+
+	\item[500] Unexpected error.
+
+\end{description}
+
+\subsection{POST /action/kill}
+
+The~kill action is performed on the~selected object and location. The~location is temporarily excluded from future requests to /location. The~player's health is updated, experience and gold are added. It returns a~\textit{killConfirmedCode} which is needed to perform the~collect action.
+
+\subsubsection*{Parameters}
+
+\begin{description}
+
+	\item[accessCode] the~\textit{Access Code}
+
+	\item[locationid] the~id of the~location
+
+	\item[gameObjectId] the~id of the~game object
+
+	\item[health] the~new player's health
+
+\end{description}
+
+\subsubsection*{Response}
+
+\begin{description}
+
+	\item[200] One-time code for kill confirmation.
+
+	\item[400] Invalid data.
+
+	\item[403] Invalid \textit{Access Code}.
+
+	\item[404] User not found, registration needed.
+
+	\item[500] Unexpected error.
+
 \end{description}
