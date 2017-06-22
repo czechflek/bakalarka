@@ -4,18 +4,21 @@
 	\subsection{Parallel Kingdom}
 	The game was developed by PerBlue and released in October 2008. Parallel Kingdom is the most similar game to ours.
 		
-	\textit{"Parallel Kingdom is a mobile, location based, massively multiplayer game that uses GPS location and Google Maps to place users in a virtual world. Parallel Kingdom is the first location based RPG for the iOS and Android platforms. The game is set in a virtual world or ”Parallel Kingdom” where users claim their territories based on their GPS location or by making friends who invite them to travel to new places."} \cite{parallelkingdom}
+	\begin{quote}
+	"Parallel Kingdom is a mobile, location based, massively multiplayer game that uses GPS location and Google Maps to place users in a virtual world. Parallel Kingdom is the first location based RPG for the iOS and Android platforms. The game is set in a virtual world or ”Parallel Kingdom” where users claim their territories based on their GPS location or by making friends who invite them to travel to new places."
+	\end{quote} \cite{parallelkingdom}
 	
-	The game gained on popularity and even reached 1 million player by the end of January 2012 \cite{parallelkingdom1m}. Parallel Kingdom discontinued on November 1, 2016 for undisclosed reasons.
+	The game gained on popularity and even reached 1 million player by the end of January 2012 \cite{parallelkingdom1m}. The overall design of the game can be seen in Figure \ref{fig:parallelkingdom}. Parallel Kingdom discontinued on November 1, 2016 for undisclosed reasons.
 	
 	\begin{figure}[h]	
 		\includegraphics[width=0.33\textwidth]{figures/parallelkingdom}
 		\centering			
 		\caption{Screenshot of Parallel Kingdom \cite{parallelkingdomscreen}}
+		\label{fig:parallelkingdom}
 	\end{figure}
 	
 	\subsection{Ingress}
-	Developed by Niantic, which was then part of Google, the game was released in December 2013 for Android, followed by an iOS version in June 2014. It is a location based, massively multiplayer game. A player joins one of two factions, Enlightened or Resistance, and then as a part of his team capture regions of the game map. Fate of the factions relies on players’ cooperation. Thanks to that players meet in real life and coordinate their actions.
+	Ingress is developed by Niantic, which was then part of Google, the game was released in December 2013 for Android, followed by an iOS version in June 2014. It is a location based, massively multiplayer game. A player joins one of two factions, Enlightened or Resistance, and then as a part of his team capture regions of the game map. Fate of the factions relies on players’ cooperation. Thanks to that players meet in real life and coordinate their actions.
 	
 	\textit{"Move through the real world using your Android device and the Ingress app to discover and tap sources of this mysterious energy. Acquire objects to aid in your quest, deploy tech to capture territory, and ally with other players to advance the cause of the Enlightened or the Resistance."} \cite{ingress}
 	
@@ -29,6 +32,8 @@
 	Pokémon GO is very similar to Ingress and uses the same crowd-sourced geographical data.
 	
 \section{Use Cases}
+Following section describes server functionality as viewed by its clients.
+
 	\subsection{Actors}
 		\begin{figure}[h]	
 			\includegraphics[width=\textwidth]{figures/UC_Actors}
@@ -81,7 +86,7 @@
 			A player wants to exchange gold in a shop for an item he chooses. When the purchase is finished, the player receives the item to his inventory.
 			
 			\item \textbf{Kill monster} \\
-			A player wants to kill monsters to progress in the game. If he successfully kills the monster, he is rewarded with gold and experience
+			A player wants to kill monsters to progress in the game. If he successfully kills the monster, he is rewarded with gold and experience.
 			
 			\item \textbf{Collect loot} \\
 			This action must be preceded by the \textit{Kill monster} use case. A player can choose to collect loot from the monster he killed.
@@ -247,13 +252,13 @@ After several discussions with my colleague, we agreed on the following requirem
 \section{Technology}
 	\subsection{Database Management System}
 			
-	The database is a crucial part of the server. It handles most of the data persistence. Many commercial and open source solutions exist on market nowadays. In the following text, I will analyze three popular relational database management systems (DBMS) -- MySQL, PostgreSQL, and Oracle. For a quick comparison, see Table \ref{tab:comparedbms}. The described advantages and disadvantages are based on \cite{dbcomparison}.
+	The database is a crucial part of the server. It handles most of the data persistence. Many commercial and open source solutions exist on market nowadays. In the following text, I will analyze three popular relational database management systems (DBMS) -- MySQL, PostgreSQL, and Oracle. I will skip analysis Microsoft SQL Server \cite{mssql}, which is another very popular DBMS, because it doesn't support Linux operating systems. For a quick comparison, see Table \ref{tab:comparedbms}. The described advantages and disadvantages are based on \cite{dbcomparison}.
 	\begin{table}
 		\centering
 		\begin{tabular}{p{0.215\textwidth} || p{0.215\textwidth} | p{0.215\textwidth} | p{0.215\textwidth}}
 			& \textbf{MySQL} & \textbf{Oracle} & \textbf{PostgreSQL} \\ 
 			\hline \hline
-			Rank\footnote{Description of the ranking methodology available at \url{https://db-engines.com/en/ranking_definition}} & 2 & 1 & 4 \\ \hline				
+			Rank\footnote{The rank orders the DBMS by their overall popularity. Description of the ranking methodology is available at \url{https://db-engines.com/en/ranking_definition}} & 2\textsuperscript{nd} & 1\textsuperscript{st} & 4\textsuperscript{th} \\ \hline				
 			Initial Release & 1995 & 1980 & 1989 \\ \hline
 			License & GPLv2\newline Commercial & Commercial & BSD-like\\ \hline
 			Version\footnote{Current stable version as of 2017/06/05} & 5.7 & 12c & 9.6 \\ \hline						
@@ -267,8 +272,8 @@ After several discussions with my colleague, we agreed on the following requirem
 		\label{tab:comparedbms}
 	\end{table}	
 
-		\subsubsection{MySQL}
-		MySQL \cite{mysql} is an open source relational database management system. It is written mostly in C++ and C \cite{mysqllanguage}.  Currently developed by Oracle, MySQL is available to consumers in several editions. Free Community Edition is released under GPLv2 license\footnote{GPLv2 license text is available at \url{https://www.gnu.org/licenses/gpl-2.0.html}}. Oracle also offers commercial Standard and Enterprise editions which include additional technical support, and monitoring and management tools \cite{mysqleditions}. This DBMS is very widely used and has a strong community base. 
+		\subsubsection*{MySQL}
+		MySQL \cite{mysql} is an open source relational database management system. It is written mostly in C++ and C \cite{mysqllanguage}.  Currently developed by Oracle, MySQL is available to consumers in several editions. Free Community Edition is released under GPLv2 license\footnote{GPLv2 license text is available at \url{https://www.gnu.org/licenses/gpl-2.0.html}}. Oracle also offers commercial Standard and Enterprise editions which include additional technical support, and monitoring and management tools \cite{mysqleditions}. This DBMS is very widely used and has a strong community base. Documentation and support for MySQL is easy to obtain \cite{mysqlbook}. 
 		
 		Community Edition includes graphic interface for database management. It also contains a user-friendly modeling tool which allows fast development of the database. The model can be converted to an SQL script and easily deployed on other MySQL servers.
 		
@@ -276,39 +281,39 @@ After several discussions with my colleague, we agreed on the following requirem
 		
 		The main disadvantages: little performance optimization, limited security,  issues with reliability.
 		
-		\subsubsection{Oracle}
+		\subsubsection*{Oracle}
 		Oracle Database \cite{oracledb} is an object-relational database management system. Developed by Oracle, it aims on enterprise-scale applications and is well suitable for large businesses. Offered editions include Standard Edition 2 and Enterprise Edition (EE) which can be further expanded by some additional services. The price of EE start at \$950 per user\footnote{Oracle Technology Global Price List, June 1, 2017}. This DBMS is very widely used in corporate environment.
 		
 		The main advantages: suitable for large databases, well scalable, extensive backup mechanisms.
 		The main disadvantages: closed source, free version has very limited feature set, expensive.
 		 
-		\subsubsection{PostgreSQL}
+		\subsubsection*{PostgreSQL}
 		PostgreSQL \cite{postgres}, also known as Postgres, is an object-relational database management system. Developed by PostgreSQL Global Development Group, a community of many companies and individuals, PostgreSQL is an open source project licensed under permissive PostgreSQL License \footnote{PostgreSQL License text is available at \url{https://opensource.org/licenses/PostgreSQL}}.
 		
 		The main advantages: open source, advanced business/location analytics features, good reliability and data-integrity.
 		
 		The main disadvantages: ill-suited for read-heavy application, poor replication.
 				
-		\subsubsection{Chosen Solution}
+		\subsubsection*{Chosen Solution}
 		All the presented solutions are similar and are well-supported by Java frameworks. I chose MySQL 5.7 Community Edition to be the database system for this server. I have good experience with MySQL environment and the cost of game development can be lower thanks to the free Community Edition. 
 		
 	\subsection{Frameworks and Libraries}
 	Frameworks provide developer with a powerful tool-box. The tools in this box help in many areas of application development. They provide essential design patterns and structure to the development project and also provide the backbone and container for the components to operate within \cite{frameworks}.
 	
-	I chose to use a Java framework which provide a support for Representational State Transfer (REST) API. Furthermore, I added an Object/Relational Mapping (ORM) framework which helps me to interconnect Java application and MySQL server.
+	I chose to use a Java framework which provide a support for Representational State Transfer (REST) API. Furthermore, I added an Object/Relational Mapping (ORM) library which helps me to interconnect Java application and MySQL server.
 	
-		\subsubsection{Dropwizard}
+		\subsubsection*{Dropwizard}
 		Dropwizard \cite{dropwizard} glues together many mature libraries which helps with developing a powerful web-application. The libaries most useful for this project include:
-			\paragraph*{Jetty}
-				Powerful open source web server. Jetty is flexible and extensible. It is a lightweight server with small footprint \cite{jetty}.
-			\paragraph*{Jersey} 
-				An open source framework for developing RESTful Web Services in Java. It supports JAX-RS\footnote{Specification of JAX-RS is available at \url{https://jcp.org/en/jsr/detail?id=311}} APIs \cite{jersey}.
-			\paragraph*{Jackson} 
-				A JSON parser and generator. It supports a conversion from JSON to Plain Old Java Object (POJO) and vice versa \cite{jackson}.			
-		\subsubsection{Hibernate ORM}
-		Hibernate ORM enables to more easily develop applications whose data outlives the application process. It is an Object/Relational Mapping framework and handles data persistence as it applies to relational database. Hibernate supports many powerful features like lazy initialization and numerous fetching strategies. It requires not special database tables and much of the SQL is generated at system initialization \cite{hibernate}.
+		\begin{description}
+			\item[Jetty] Powerful open source web server. Jetty is flexible and extensible. It is a lightweight server with small footprint \cite{jetty}.
+			\item[Jersey] An open source framework for developing RESTful Web Services in Java. It supports JAX-RS\footnote{Specification of JAX-RS is available at \url{https://jcp.org/en/jsr/detail?id=311}} APIs \cite{jersey}.
+			\item[Jackson] A JSON parser and generator. It supports a conversion from JSON to Plain Old Java Object (POJO) and vice versa \cite{jackson}.			
+		\end{description}
+			
+		\subsubsection*{Hibernate ORM}
+		Hibernate is a library which simplifies the use of a relational database. It provides an \textit{Object/Relational Mapping} (ORM) which presents relational data as \textit{plain old Java objects} (POJOs). Thanks to Hibernate, developer doesn't have to worry about managing database connections \cite{hibernatebook}. Hibernate documentation can be found at its homepage \cite{hibernate}.
 		
-		\subsubsection{Google API Client Libraries}
+		\subsubsection*{Google API Client Libraries}
 		A library developed by Google to help developers integrate Google API to their applications \cite{googleapilibs}. The library is included in this project to handle user authentication and to verify in-app purchases.
 		
 	\subsection{Index and Cache}

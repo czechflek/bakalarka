@@ -22,19 +22,19 @@ The~game server is divided into separate components. Many instances of a~compone
 	Authentication process is visualized in Figure \ref{fig:adauth}.
 	
 	\begin{figure}[h]	
-		\includegraphics[width=\textwidth]{figures/AD_Authentication}
+		\includegraphics[width=\textwidth]{figures/AD_Authentication2}
 		\centering			
 		\caption{Activity diagram of the~authentication process}
 		\label{fig:adauth}
 	\end{figure}
 
-		\subsubsection{Access Code}
+		\subsubsection*{Access Code}
 		A~client is identified by his access code during a~session. The~code is random and unique. It is generated each time the~client finishes login process; the~old code,  previously issued to the~user, is invalidated.
 		
-		\subsubsection{Registration}
+		\subsubsection*{Registration}
 		Every user must register an account to gain access to the~game. The~user is asked to choose a~unique username. If the~username is already taken, the~whole registration process has to be repeated. LS retrieves user's UID and his e-mail address and passes the~information to the~DS, which then creates and initializes a~new user profile. Client is issued an access code and the~authentication process is completed.
 		
-		\subsubsection{Login}
+		\subsubsection*{Login}
 		A~registered user can simply login using only his ID Token, which is provided to client during login process by Google Play Games. LS exchanges the~token for UID which is then used to retrieve user's profile. Client is issued an access code and the~authentication process is completed.
 	
 	\subsection{Killing a~Monster}
@@ -53,10 +53,10 @@ The~game server is divided into separate components. Many instances of a~compone
 	User selects a \textit{slot} and an appropriate item from his inventory. The client sends the item along with the slot to the server. DS checks if the item-slot pair is correct and assigns the item to the \textit{slot}. The successful result is then confirmed to the client.
 	
 	\subsection{Using an Item}
-	User selects a usable item from his inventory. Client sends the selected item to the server. DS decides what the item does by looking at attributes \textit{addHealth}, \textit{addExperience}, and \textit{addGold}. Based o the values set for the item, health, experience, and/or gold is added to user's account. The updated profile is then sent back to the client.
+	User selects a usable item from his inventory. Client sends the selected item to the server. DS decides what the item does by looking at attributes \textit{addHealth}, \textit{addExperience}, and \textit{addGold}. Based on the values set for the item, health, experience, and/or gold is added to user's account. The updated profile is then sent back to the client.
 		
 	\subsection{Purchasing In-app Product}
-	In-app purchases are handled on client which performs the transaction using a Google service. The prototype currently supports only buying \textit{gold}. If the transaction is successful, client sends a Google's \textit{Purchase token} to the server. LS verifies the status of the purchase using \textbf{Android Publisher API} \cite{androidpublisher} and adds the \textit{gold} to user's account. The purchase is then confirmed to the client.
+	In-app purchases are handled by client which performs the transaction using a Google service. The prototype currently supports only buying \textit{gold}. If the transaction is successful, client sends a Google's \textit{Purchase token} to the server. LS verifies the status of the purchase using \textbf{Android Publisher API} \cite{androidpublisher} and adds the \textit{gold} to user's account. The purchase is then confirmed to the client.
 
 	\subsection{Retrieving Nearby Game Objects}
 	Client visualizes nearby \textit{game objects} on the map. Since the user moves, the client frequently retrieves new \textit{game objects} based on the actual location, making high demands on the speed of the retrieval process.
@@ -108,27 +108,42 @@ The~game server is divided into separate components. Many instances of a~compone
 \section{Administration}
 The \textit{Database server} supports several API endpoints through which authorized administrators can manage the game data. The \textit{Admin} section is protected using \textbf{HTTP Basic Authentication} and thus the administrator has to know a valid username-password combination. For prototyping purposes, I've decided to provide only basic functionality for the administration.
 
-	\subsection{Game Object Type Management}
-	Administrator can create new \textit{game object types} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObjectType}}. A unique \textit{name} has to be specified for the new type. Optionally, the type can include a \textit{description}, a set of allowed \textit{actions} and \textit{attributes}.
+	\subsection{Front-end Design}
+	Administrators can use a web front-end to manage game objects, their types, and locations. All actions are accessible from top-side menu. 
 	
-	Existing \textit{game object types} can be updated. It is possible to change all their properties like \textit{name} and \textit{description}. Administrator can also add new \textit{attributes} and \textit{actions}. This is done using PUT request to the endpoint \mbox{\textit{/admin/gameObjectType}}
+	For example, when there's need to update inventory of an existing game object, it is possible to use the interface from Figure \ref{fig:wireframegameobject}. After selecting a game object, administrator is presented with two panes, first of which displays all available objects and the second one shows current inventory of the selected game object. New items can be added to the inventory by simply selecting an item from the first list and then clicking on a \textbf{>>} button
+	
+	\begin{figure}[h]	
+		\includegraphics[width=\textwidth]{figures/GameObjectAdminWireframe}
+		\centering			
+		\caption{Wire-frame of administration front-end - game object inventory}
+		\label{fig:wireframegameobject}
+	\end{figure}	
+	
+	The front-end won't be implemented during the prototyping phase. Administrators can directly call API endpoints to manage game data.	
+
+	\subsection{Game Object Type Management}
+	Administrator can create new game object types by sending a POST request to the endpoint \textit{/admin/gameObjectType}. A unique \textit{name} has to be specified for the new type. Optionally, the type can include a \textit{description}, a set of allowed \textit{actions} and \textit{attributes}.
+	
+	Existing game object types can be updated. It is possible to change all their properties like \textit{name} and \textit{description}. Administrator can also add new \textit{attributes} and \textit{actions}. This is done using PUT request to the endpoint \textit{/admin/gameObjectType}
 		
-	All existing \textit{game object types} can be retrieved along with their \textit{actions} and \textit{attributes} by sending a GET request to the endpoint \mbox{\textit{/admin/gameObjectType}}
+	All existing game object types can be retrieved along with their \textit{actions} and \textit{attributes} by sending a GET request to the endpoint \textit{/admin/gameObjectType}
 	
 	\subsection{Game Object Management}
-	Administrator can create new \textit{game objects} by sending a POST request to the endpoint \mbox{\textit{/admin/gameObject}}. \textit{Game object type} have to be specified for the new \textit{game object}. Optionally, the new object can have a set of children which can be later updated by calling PUT \mbox{\textit{/admin/gameObject}}.
+	Administrator can create new game objects by sending a POST request to the endpoint \textit{/admin/gameObject}. Game object type have to be specified for the new game object. Optionally, the new object can have an inventory which can be later updated by calling PUT request to the same endpoint.
 	
-	All existing \textit{game objects} can be retrieved along with their children by sending a GET request to the endpoint \mbox{\textit{/admin/gameObject}}
+	All existing game objects can be retrieved along with their children by sending a GET request to the endpoint \textit{/admin/gameObject}
 	
 	\subsection{Location Import}
-	New locations can be imported from a file in OSM XML \cite{osmxml}. Administrator can do so be sending a POST request to \mbox{\textit{/admin/importLocations}}. The file is parsed for latitude and longitude data nad the new locations are inserted into the database.
+	New locations can be imported from a file in OSM XML \cite{osmxml}. Administrator can do so be sending a POST request to \textit{/admin/importLocations}. The file is parsed for latitude and longitude data nad the new locations are inserted into the database.
 	
 	\subsection{Game Object To a Location Assignment}
-	A location serves no purpose without a\textit{game object} assigned to it. This can be achieved by using PUT endpoint \mbox{\textit{/admin/assignGameObjectToLocation}}.
+	A location serves no purpose without a\textit{game object} assigned to it. This can be achieved by using PUT endpoint 
+	\textit{/admin/assignGameObjectToLocation}.
 	
 	\subsection{Cache Clearing}
-	During the development process, developers might need to change game data by accessing the database directly. Since Hibernate won't be aware of such changes, its cache must be cleared via DELETE endpoint\mbox{\textit{/admin/clearCache}}.
-
+	During the development process, developers might need to change game data by accessing the database directly. Since Hibernate won't be aware of such changes, its cache must be cleared via DELETE endpoint \textit{/admin/clearCache}.
+	
 \section{Calculations}
 	\subsection{User's Level}
 	\[ level = \left\lfloor{\left(\frac{xp}{1024}\right)^{0.62} + 1}\right\rfloor, \]

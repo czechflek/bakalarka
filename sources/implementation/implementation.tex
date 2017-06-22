@@ -84,10 +84,13 @@ Package \textit{bachelors.database.db} contains model in which database operatio
 \label{section:deploy}
 The prototype currently runs on a virtual private server provided by WEDOS internet, a.s. The server runs on Debian~8. It uses the lowest available server specification\footnote{Offered server \url{https://hosting.wedos.com/cs/virtualni-servery.html}}:
 \begin{tabbing}
-	\textit{CPU} ~~ \= 1 thread Xeon 1.80 GHz\\
+	\textit{CPU} ~~ \= 1 thread Xeon 1.70 GHz\\
 	\textit{RAM} \> 2 GB\\
 	\textit{SSD} \> 15 GB\\
 	\textit{SLA} \> 99.99\%
 \end{tabbing}
 
 The specifications are sufficient for testing and prototyping but in unused state, the server has only about 200~MB free RAM. Additionally, the application will have to support many concurrent users which requires more CPU threads.  
+
+\section{Documentation}
+The source code of the application includes a documentation in JavaDoc notation. Generated documentation is available as interactive HTML document on the enclosed SD card at \textit{/documentation}.

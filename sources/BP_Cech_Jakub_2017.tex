@@ -15,11 +15,14 @@
 \usepackage{float}
 \usepackage{graphicx} %graphics files inclusion
 \usepackage{fontspec}
+\usepackage{enumitem}
 % \usepackage{subfig} %subfigures
 % \usepackage{amsmath} %advanced maths
 % \usepackage{amssymb} %additional math symbols
 
 \usepackage{dirtree} %directory tree visualisation
+\usepackage{rotating}
+\usepackage[section]{placeins}
 
 \usepackage[
 backend=biber,
@@ -31,9 +34,12 @@ style=iso-numeric
 \makesavenoteenv{tabular}
 \makesavenoteenv{table}
 
+
 \renewcommand{\arraystretch}{1.2}
 \renewcommand\labelitemi{---}
 \raggedbottom
+
+\setlist[description]{leftmargin=\parindent,labelindent=\parindent}
 
 \bibliography{mybibliographyfile}
 
@@ -50,12 +56,19 @@ style=iso-numeric
 \author{Jakub Čech} %author's name without academic degrees
 \authorWithDegrees{Jakub Čech} %author's name with academic degrees
 \supervisor{Ing. Miroslav Balík, Ph.D.}
-\acknowledgements{\textbf{TODO} I would like to thank myself for doing this. I am an awesome and humble person. With great power comes great responsibility and no one else is as good or worthy as I am to be thanked. Ave Kuba!}
-\abstractEN{\textbf{TODO} Place the 2 cups of crushed ice into a cocktail shaker. Pour the rum, lime juice, and simple syrup over the ice, cover, and shake well. Remove the ice from your serving glass and strain the drink into it. Serve immediately.}
-\abstractCS{\textbf{TODO} Hvězdy jsou krásné, protože je na nich květina, kterou není vidět. Poušť je krásná právě tím, že někde skrývá studnu. Ať je to dům, hvězdy nebo poušť, to, co je dělá krásnými, je neviditelné!}
+
+\acknowledgements{I would like to thank my supervisor Ing. Miroslav Balík, Ph.D. for his good leadership and assistance. Big thanks go to my colleague Tomáš Zahálka for excellent cooperation. Thanks go to my family and friends for their support. Lastly, I would like to humbly thank myself for doing only a healthy level of procrastination.}
+
+\abstractEN{The thesis goes through the entire process of developing a functional prototype of a mobile multiplayer role-playing game with augmented reality features. The project is divided into two parts. First one is the Client which is installed at players' devices and allows them to interact with the game. The second one is the Server which provides multiplayer support for the Client, carries the game logic, and manages data persistence. This thesis deals only with development of the Server in Java language and involves challenges like designing and implementing an interface for clients to access the server features, creating a database structure capable of supporting a multiplayer game, and testing. The server features include support for interactions with game objects, such as fighting monster and using items, verification of in-app purchases made on Android system, and also geo-spatial search of game locations near a player. The prototype can be considered an Alpha version of the application and is ready to fully support the Client part.}
+
+\abstractCS{Má bakalářská práce se zabývá procesem vývoje funkčního prototypu hry na hrdiny pro mobilní zařízení. Hra je určena pro více hráčů a obsahuje prvky rozšířené reality. Celý projekt je rozdělen na dvě části. První částí je Klient, aplikace nacházející se přímo na zařízeních hráčů a umožnující jim ovládat hru. Druhou částí je Server, který umožňuje hru více hráčů současně, vykoná herní logiku a zajišťuje uchovávání dat. Tato práce se zabývá vývojem pouze serverové časti. Práce zahrnuje návrh a vytvoření rozhraní umožnující klientům pracovat s funkcemi serveru, dále návrh struktury databázových dat a také testování. Mezi funkce Serveru patří podpora akcí spojených s herními objekty, jako například zabíjení monster či používání objektů, ověřování mikrostransakcí provedených v systému Android a vyhledávání herních lokací v blízkosti hráče. Vzniklý prototyp odpovídá stavu Alfa verze aplikace a je připraven plně podporovat klientskou část.}
+
 \placeForDeclarationOfAuthenticity{Prague}
-\keywordsCS{\textbf{TODO} \#deep, \#thoughtoftheday, \#follow4follow}
-\keywordsEN{\textbf{TODO} Daiquiri, Coctail, Rum, Cuba}
+
+\keywordsCS{herní server, Java, rozšířená realita, vyhledávání míst, funkční prototyp, mikrotransakce}
+
+\keywordsEN{game server, Java, augmented reality, geo-spatial search, functional prototype, in-app purchases}
+
 \declarationOfAuthenticityOption{1} %select as appropriate, according to the desired license (integer 1-6)
 
 
@@ -69,11 +82,8 @@ style=iso-numeric
 	\input{intro/intro}	
 	
 	\setsecnumdepth{all}
-	\chapter{Goals of the Thesis}
-	\input{goals/goals}
-		
-	\chapter{Game Description}
-	\input{description/description}
+	\chapter{Project Overview}
+	\input{overview/overview}
 	
 	\chapter{Analysis}
 	\input{analysis/analysis}
@@ -99,28 +109,35 @@ style=iso-numeric
 	\chapter{Acronyms}
 	% \printglossaries
 	\begin{description}
-		\item[CS] Connection Server
-		\item[LS] Login Server
-		\item[DS] Database Server
-		\item[ID] Identifier
-		\item[UID] Unique Identifier
-		\item[HTTP] Hypertext Transfer Protocol
-		\item[HTTPS] Hypertext Transfer Protocol Secure
-		\item[JSON] JavaScript Object Notation
 		\item[API] Application Programming Interface
-		\item[DBMS] Database Management System
-		\item[REST] Representational State Transfer
-		\item[IDE] Integrated Development Environment
 		\item[CPU] Central Processing Unit
+		\item[CS] Connection Server
+		\item[DBMS] Database Management System
+		\item[DS] Database Server
+		\item[HTTP] Hypertext Transfer Protocol
+		\item[HTTPS] Hypertext Transfer Protocol Secure	
+		\item[ID] Identifier
+		\item[IDE] Integrated Development Environment
+		\item[JSON] JavaScript Object Notation
+		\item[LS] Login Server
 		\item[RAM] Random-Access Memory
-		\item[SLA] Service Level Agreement
+		\item[REST] Representational State Transfer
+		\item[SLA] Service Level Agreement	
+		\item[UID] Unique Identifier
+		\item[URI] Uniform Resource Identifier
+		\item[URL] Uniform Resource Locator		
 	\end{description}
 	
 	\chapter{API}
 	\label{appendix:api}
+	\input{api/api}	
 	
 	\chapter{Class Diagrams}
 	\label{appendix:classdiagrams}
+	\input{class/class}
+	
+	\chapter{Installation Instructions}
+	\input{install/install}
 	
 	\chapter{Contents of enclosed CD}
 	
