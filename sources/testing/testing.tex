@@ -1,35 +1,35 @@
 \section{Unit Testing}
-The project use JUnit \cite{junit}. Unit tests are located in \textit{src/test} directory in the root folder of each component and are included on the SD card. All components use the test to verify proper serialization and deserialization of JSON requests. Each tested JSON object is defined in \textit{src/test/resources/fixtures}.
+The project use JUnit \cite{junit}. Unit tests are located in \textit{src/test} directory in the~root folder of each component and are included on the~SD card. All components use the~tests to verify proper serialization and deserialization of JSON requests. Each tested JSON object is defined in \textit{src/test/resources/fixtures}.
 
-The tests are packed in a test suite. This allows running all test by executing \textit{bachelors.*component\_name*.api.AllTests}. All tests are passing in the current build.
+The tests are packed in a~test suite. This allows running all test by executing \textit{bachelors.*component\_name*.api.AllTests}. All tests are passing in the~current build.
 
 \section{Static Code Analysis}
-I use SonarLint \cite{sonarlint} for on-the fly static code analysis. It offers many useful rules with specified severity and also a descriptions how to fix the issues. Static code analysis discovered many problems, the most notable were:
+I use SonarLint \cite{sonarlint} for on-the fly static code analysis. It offers many useful rules with specified severity and also guidelines how to fix the~issues. Static code analysis discovered many problems, the~most notable were:
 \begin{itemize}
-	\item Create a private constructor to hide the implicit one in a static class.
+	\item Create a~private constructor to hide the~implicit one in a~static class.
 	\item Use constant instead of duplicating string literal.
-	\item Replace use of System.out by a logger.
+	\item Replace use of System.out by a~logger.
 	\item Make final constants also static.
 \end{itemize}
-The static analysis proved to be useful to maintain a good quality of the code and prevent bugs.
+The static analysis proved to be useful to maintain a~good quality of the~code and prevent bugs.
 
 \section{System Testing}
-I developed a Python script to test most of the endpoints in the real environment. The script doesn't test \textit{/login/registration} and \textit{/purchase} endpoints as they need valid Google tokens which can't be reused and are not easily obtainable. All tests are passing in the current build.
+I developed a~Python script to test most of the~endpoints in the~real environment. The script doesn't test \textit{/login/registration} and \textit{/purchase} endpoints as they need valid Google tokens which can't be reused and are not easily obtainable. All tests are passing in the~current build.
 
-The script requires Python 3 or newer to run and is located in \textit{BachelorsServer/SystemTest/TestBachelorsPrototype.py}. The tester must initialize the script with values of a test account in the current database. The script then sends HTTP request to each endpoint testing valid and invalid data.
+The script requires Python 3 or newer to run and is located in \textit{BachelorsServer/SystemTest/TestBachelorsPrototype.py}. The tester must initialize the~script with values of a~test account in the~current database. The script then sends HTTP request to each endpoint testing valid and invalid data.
 
-For example, test \textit{ACTION -- Kill} verifies the client cannot request setting his health to a negative value or more than his level allows. Script also tries to kill a monster at a wrong location and vice versa. A successful kill follows a second attempt to kill the same monster which must fail. 
+For example, test \textit{ACTION -- Kill} verifies the~client cannot request setting his health to a~negative value or more than his level allows. Script also tries to kill a~monster at a~wrong location and vice versa. A successful kill follows a~second attempt to kill the~same monster which must fail. 
 
 
 \section{Client Testing}
-I tested the application with my colleague using his client part of the game. We didn't discover any bugs which would affect the player in any way.
+I tested the~application with my colleague using his client part of the~game. We didn't discover any bugs which would affect the~player in any way.
 
 \section{Stress Testing}
-I performed a stress test using Apache JMeter \cite{jmeter}. This testing framework is used to simulate interactions with a web server. Results of this type of test offer useful insight into how many concurrent users can server handle. Hardware specifications of the testing environment are described in Section \ref{section:deploy}.
+I performed a~stress test using Apache JMeter \cite{jmeter}. This testing framework is used to simulate interactions with a~web server. Results of this type of test offer useful insight into how many concurrent users can server handle. Hardware specifications of the~testing environment are described in Section \ref{section:deploy}.
 
-I created a test plan in a way so that one thread simulates about 10 users. Each thread operates independently for 10 minutes and performs following series of actions:
+I created a~test plan in a~way so that one thread simulates about 10 users. Each thread operates independently for 10 minutes and performs following series of actions:
 \begin{enumerate}
-	\item Wait 1 second\footnote{The locations are fetched from the server once every 10 seconds in the real game client},
+	\item Wait 1 second\footnote{The locations are fetched from the~server once every 10 seconds in the~real game client},
 	\item get nearby locations around location A (\textit{/location}),
 	\item wait 1 second,
 	\item get nearby locations around location B (\textit{/location}),
@@ -40,9 +40,9 @@ I created a test plan in a way so that one thread simulates about 10 users. Each
 	\item go back to step 1.
 \end{enumerate}
 
- As expected, calls to the endpoint \textit{/location} took the longest time out of the three tested, the difference in latency was about 30\% on average for up to 2~300 users. As you can see in Table \ref{tab:loadtestresults}, latency significantly increased at 3~000 users and about 2\% request resulted in an error. At 5 000 users, the server was far beyond its limits and responded with very high latency and about 8\% error rate. This behavior is expected due to the very limited resources of the server. The results might be affected by the performance issues of the test machine, since 500 threads had to be run concurrently to simulate 5 000 users.
+ As expected, calls to the~endpoint \textit{/location} took the~longest time out of the~three tested, the~difference in latency was about 30\% on average for up to 2~300 users. As you can see in Table \ref{tab:loadtestresults}, latency significantly increased at 3~000 users and about 2\% request resulted in an error. At 5 000 users, the~server was far beyond its limits and responded with very high latency and about 8\% error rate. This behavior is expected due to the~very limited resources of the~server. The results might be affected by the~performance issues of the~test machine, since 500 threads had to be run concurrently to simulate 5 000 users.
 
-Based on the test, server is currently able to handle more than 2~300 concurrent users with no performance issues that would affect clients. Since the server currently uses minimal available hardware specification, the computational power can be easily scaled up when the application reaches about 2~000 daily users.
+Based on the~test, server is currently able to handle more than 2~300 concurrent users with no performance issues that would affect clients. Since the~server currently uses minimal available hardware specification, the~computational power can be easily scaled up when the~application reaches about 2~000 daily users.
 
 \begin{table}
 	\centering
@@ -51,7 +51,7 @@ Based on the test, server is currently able to handle more than 2~300 concurrent
 		Latency median [ms] & 108 & 123 & 166 & 473 & 1 737 \\
 		Throughput [request/s] & 16.0 & 46.4 & 67.9 & 79.1 & 99.8 \\
 	\end{tabular}
-	\caption{Result of the server stress test.}
+	\caption{Result of the~server stress test.}
 	\label{tab:loadtestresults}
 \end{table}	
 

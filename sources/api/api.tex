@@ -1,22 +1,22 @@
 \section{Public API}
-Following text describes public API available to clients. All error responses return \textbf{Error} (\ref{json:error}) with a description of the error.
+Following text describes public API available to clients. All error responses return \textbf{Error} (\ref{json:error}) with a~description of the~error.
 
 	\subsection{GET /login}
-	The Login endpoint verifies a Google ID \textit{token} and generates an \textit{access code} for future request. When successfully authenticated, user's profile and the \textit{access code} is returned.
+	The Login endpoint verifies a~Google ID token and generates an access code for future request. When successfully authenticated, user's profile and the~access code is returned.
 		\paragraph*{Parameters}
 			\begin{description}
 				\item[token] Google ID token [string]
 			\end{description}
 		\paragraph*{Responses}
 			\begin{description}
-				\item[200] User successfully logged in, return \textbf{Profile} (\ref{json:profile}) with \textit{access code} set.
-				\item[403] Invalid \textit{token}
+				\item[200] User successfully logged in, return \textbf{Profile} (\ref{json:profile}) with access code set.
+				\item[403] Invalid token
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{POST /login/register}
-	The Registration endpoint creates a new user on the server. His profile is initialized with default values. If the \textit{username} is taken or if the user already exists, then an error is returned.
+	The Registration endpoint creates a~new user on the~server. His profile is initialized with default values. If the~username is taken or if the~user already exists, then an error is returned.
 	
 		\paragraph*{Body}
 			\begin{description}
@@ -24,29 +24,29 @@ Following text describes public API available to clients. All error responses re
 			\end{description}
 		\paragraph*{Responses}
 			\begin{description}
-				\item[200] User successfully registered and logged in, return \textbf{Profile} (\ref{json:profile}) with \textit{access code} set.
-				\item[403] Invalid \textit{token}
-				\item[409] Either \textit{username} exists or the user is already registered.
+				\item[200] User successfully registered and logged in, return \textbf{Profile} (\ref{json:profile}) with access code set.
+				\item[403] Invalid token
+				\item[409] Either username exists or the~user is already registered.
 				\item[500] Unexpected error
 			\end{description}	
 
 	\subsection{GET /user}
-	The User endpoint returns the user profile.
+	The User endpoint returns the~user profile.
 		\paragraph*{Parameters}
 			\begin{description}
-				\item[accessCode] \textit{Access code} [string]
+				\item[accessCode] Access code [string]
 			\end{description}
 		\paragraph*{Responses}
 			\begin{description}
 				\item[200] Return \textbf{Profile} (\ref{json:profile}).
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 
 	
 	\subsection{PUT /user/die}	
-	The Die endpoint kills a user. He's punished with a \textit{gold} penalty and his \textit{health} is restored.
+	The Die endpoint kills a~user. He's punished with a~gold penalty and his health is restored.
 		\paragraph*{Body}
 			\begin{description}
 				\item[AccessCode] Defined in \ref{json:accesscode}.
@@ -54,43 +54,43 @@ Following text describes public API available to clients. All error responses re
 		\paragraph*{Responses}
 			\begin{description}
 				\item[200] Return \textbf{Profile} (\ref{json:profile}).
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{GET /user/inventory}
-	The User Inventory endpoint return all the items in the user's inventory and the information about what is equipped in which slot.
+	The User Inventory endpoint return all the~items in the~user's inventory and the~information about what is equipped in which slot.
 		\paragraph*{Parameters}
 			\begin{description}
-				\item[accessCode] \textit{Access code} [string]
+				\item[accessCode] Access code [string]
 			\end{description}
 		\paragraph*{Responses}
 			\begin{description}
 				\item[200] Return \textbf{InventoryWEquipment} (\ref{json:inventoryequipment}).
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 		
 	\subsection{GET /location}
-	The Location endpoint retrieves all nearby locations in radius 200 m from the provided coordinates. The locations are returned along with their associated game objects.
+	The Location endpoint retrieves all nearby locations in radius 200 m from the~provided coordinates. The locations are returned along with their associated game objects.
 		\paragraph*{Parameters}
 			\begin{description}
-				\item[accessCode] \textit{Access code} [string]
+				\item[accessCode] Access code [string]
 				\item[lat] Latitude [double]
 				\item[lon] Longitude [double]
 			\end{description}
 		\paragraph*{Responses}
 			\begin{description}
-				\item[200] Return list of nearby \textbf{Location} (\ref{json:location}) along with their assigned \textit{game object}.
-				\item[403] Invalid \textit{access code}
+				\item[200] Return list of nearby \textbf{Location} (\ref{json:location}) along with their assigned game object.
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{POST /action/kill}
-	The Kill endpoint performs kill action on the selected object and location. The location will be temporarily excluded from future requests to \textit{/location}. User \textit{health} will be updated, \textit{experience} and \textit{gold} will be added. The endpoint returns \textit{killConfirmedCode} which is needed to perform collect action
+	The Kill endpoint performs kill action on the~selected object and location. The location will be temporarily excluded from future requests to \textit{/location}. User health will be updated, experience and gold will be added. The endpoint returns \textit{killConfirmedCode} which is needed to perform collect action
 		\paragraph*{Body}
 			\begin{description}
 				\item[Kill] Defined in \ref{json:kill}.
@@ -99,13 +99,13 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}
 				\item[200] Return \textbf{KillConfirmedCode} (\ref{json:killconfirm}).
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{POST /action/collect}
-	The Collect endpoint allows collecting items from \textit{monster's} inventory after kill. It can be called only once after each kill.
+	The Collect endpoint allows collecting items from monster's inventory after kill. It can be called only once after each kill.
 		\paragraph*{Body}
 			\begin{description}
 				\item[Collect] Defined in \ref{json:collect}.
@@ -114,13 +114,13 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}		
 				\item[200] Return \textbf{InventoryWEquipment} (\ref{json:inventoryequipment}).
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{PUT /action/equip}
-	The Equip endpoint equips an item from user's inventory to the specified slot.
+	The Equip endpoint equips an item from user's inventory to the~specified slot.
 		\paragraph*{Body}
 			\begin{description}
 				\item[Equip] Defined in \ref{json:equipment}.
@@ -129,13 +129,13 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}		
 				\item[200] Successfully equipped item
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{POST /action/use}
-	The Use endpoint uses an item from user's inventory and adds \textit{health}, \textit{gold}, or \textit{experience}.
+	The Use endpoint uses an item from user's inventory and adds health, gold, or experience.
 		\paragraph*{Body}
 			\begin{description}
 				\item[Use] Defined in \ref{json:use}.
@@ -144,13 +144,13 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}		
 				\item[200] Return \textbf{Profile} (\ref{json:profile}).
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
 	
 	\subsection{POST /action/buy}
-	The Buy endpoint buys an item from a \textit{shop}.
+	The Buy endpoint buys an item from a~shop.
 		\paragraph*{Body}
 			\begin{description}
 				\item[Buy] Defined in \ref{json:buy}.
@@ -159,7 +159,7 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}		
 				\item[200] Return \textbf{InventoryWEquipment} (\ref{json:inventoryequipment}).
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
@@ -174,7 +174,7 @@ Following text describes public API available to clients. All error responses re
 			\begin{description}		
 				\item[200] Return \textbf{Profile} (\ref{json:profile}).
 				\item[400] Invalid data
-				\item[403] Invalid \textit{access code}
+				\item[403] Invalid access code
 				\item[404] User not found
 				\item[500] Unexpected error
 			\end{description}
@@ -183,7 +183,7 @@ Following text describes public API available to clients. All error responses re
 The following endpoints are protected with HTTP Basic Authentication. Authorized users can use them to manage game objects, locations, and game object types.
 
 	\subsection{PUT /admin/reindex}
-	The Reindex endpoint clears the location index and re-initializes it.
+	The Reindex endpoint clears the~location index and re-initializes it.
 		\paragraph*{Responses}
 		\begin{description}		
 			\item[200] Successfully reindexed
@@ -191,7 +191,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 		\end{description}
 
 	\subsection{POST /admin/importLocations}
-	The Import locations endpoint parses an XML file with OpenStreetMap locations and imports them into the database.
+	The Import locations endpoint parses an XML file with OpenStreetMap locations and imports them into the~database.
 		\paragraph*{Body}
 			\begin{description}
 				\item[ImportLocations] Defined in \ref{json:importlocations}.
@@ -203,7 +203,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 			\end{description}
 		
 	\subsection{DELETE /admin/clearCache}
-	The Clear cache locations endpoint parses an XML file with OpenStreetMap locations and imports them into the database.
+	The Clear cache locations endpoint parses an XML file with OpenStreetMap locations and imports them into the~database.
 		\paragraph*{Responses}
 			\begin{description}		
 				\item[200] Cache successfully cleared
@@ -219,7 +219,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 			\end{description}
 			
 	\subsection{POST /admin/gameObject}
-	The POST Game object endpoint creates a new game object of a specified type.
+	The POST Game object endpoint creates a~new game object of a~specified type.
 		\paragraph*{Responses}
 			\paragraph*{Body}
 				\begin{description}
@@ -232,7 +232,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 			\end{description}
 			
 	\subsection{PUT /admin/gameObject}
-	The PUT Game object endpoint replaces the game object's children with the ones provided in the request.
+	The PUT Game object endpoint replaces the~game object's children with the~ones provided in the~request.
 		\paragraph*{Responses}
 			\paragraph*{Body}
 				\begin{description}
@@ -254,7 +254,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 			\end{description}
 			
 	\subsection{POST /admin/gameObjectType}
-	The POST Game object type endpoint creates a new game object type with specified actions and attributes. 
+	The POST Game object type endpoint creates a~new game object type with specified actions and attributes. 
 		\paragraph*{Body}
 			\begin{description}
 				\item[AdminGameObjectType] Defined in \ref{json:admingameobjecttype}.
@@ -267,7 +267,7 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 			\end{description}
 			
 	\subsection{PUT /admin/gameObjectType}
-	The PUT Game object type endpoint updates the game object type.
+	The PUT Game object type endpoint updates the~game object type.
 		\paragraph*{Body}
 			\begin{description}
 				\item[AdminGameObjectType] Defined in \ref{json:admingameobjecttype}. Field \textit{id} is mandatory.
@@ -281,10 +281,10 @@ The following endpoints are protected with HTTP Basic Authentication. Authorized
 				
 
 \section{JSON Objects}
-Definitions of objects sent in HTTP response or request body. The objects are of the type \textit{application/json}.
+Definitions of objects sent in HTTP response or request body. The objects are of the~type \textit{application/json}.
 	\subsection{Profile}
 		\label{json:profile}
-		Complete user's profile information. May include \textit{access code}.
+		Complete user's profile information. May include access code.
 		\subsubsection{Schema}	
 			\begin{description}
 				\item[id] User ID [string]
@@ -313,12 +313,12 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[code] Error code [integer]
-				\item[reason] Explanation of the error [string]
+				\item[reason] Explanation of the~error [string]
 			\end{description}
 
 	\subsection{AccessCode}
 		\label{json:accesscode}
-		Wrapper entity for \textit{access code}.
+		Wrapper entity for access code.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code
@@ -335,7 +335,7 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 	
 	\subsection{Equipment}
 		\label{json:equipment}
-		Entity which contains all slots a player can equip items to. Each slot contains ID of the equipped item or null, if empty. 
+		Entity which contains all slots a~player can equip items to. Each slot contains ID of the~equipped item or null, if empty. 
 		\subsubsection{Schema}
 			\begin{description}
 				\item[feet] Item in feet slot [integer]
@@ -356,41 +356,41 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[id] Item ID [integer]
-				\item[gameObjectTypeId] ID of the type of the item.	[integer]		
+				\item[gameObjectTypeId] ID of the~type of the~item.	[integer]		
 			\end{description}
 
 	\subsection{Location}
 		\label{json:location}	
-		Description of a game location. Includes a \textit{game object} assigned to it.
+		Description of a~game location. Includes a~game object assigned to it.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[id] Location ID [integer]
 				\item[latitude] Latitude [double]
 				\item[latitude] Longitude [double]
-				\item[gameObject] \textbf{GameObject} (\ref{json:gameobject}) assigned to the location [object]
+				\item[gameObject] \textbf{GameObject} (\ref{json:gameobject}) assigned to the~location [object]
 			\end{description}	
 
 	\subsection{GameObject}
 		\label{json:gameobject}
-		Game object like \textit{monster} or \textit{shop}. Includes its inventory.
+		Game object like monster or shop. Includes its inventory.
 
 		\subsubsection{Schema}
 			\begin{description}
 				\item[id] Game object ID [integer]
 				\item[name] Custom name [string]
 				\item[description] Custom description [string]
-				\item[gameObjectTypeId] ID of the type of the game object [integer]
+				\item[gameObjectTypeId] ID of the~type of the~game object [integer]
 				\item[gameObjects] List of \textbf{GameObject} (\ref{json:gameobject}) contained in this one [array of objects]
 			\end{description}
 	
 	\subsection{Kill}
 		\label{json:kill}
-		Information about the user's kill. Describes the kill result.
+		Information about the~user's kill. Describes the~kill result.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[locationId] ID of the location where the kill happened [integer]
-				\item[gameObjectId] ID of the killed monster [integer]
+				\item[locationId] ID of the~location where the~kill happened [integer]
+				\item[gameObjectId] ID of the~killed monster [integer]
 				\item[health] User's health after kill [integer]
 			\end{description}
 	
@@ -404,12 +404,12 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 	
 	\subsection{Collect}
 		\label{json:collect}
-		Specification of what user wants to collect from his killed \textit{monster}.
+		Specification of what user wants to collect from his killed monster.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[killConfirmedCode] Confirmation code for the kill [integer]
-				\item[gameObjects] List of IDs of the game objects user wants to collect [array of integers]
+				\item[killConfirmedCode] Confirmation code for the~kill [integer]
+				\item[gameObjects] List of IDs of the~game objects user wants to collect [array of integers]
 			\end{description}
 	
 	\subsection{Equip}
@@ -418,8 +418,8 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[itemId] ID of the item from user's inventory to equip [integer]
-				\item[slot] Name of the slot in which to equip the item [string]
+				\item[itemId] ID of the~item from user's inventory to equip [integer]
+				\item[slot] Name of the~slot in which to equip the~item [string]
 			\end{description}
 
 	\subsection{Use}
@@ -429,18 +429,18 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[itemId] ID of the item from user's inventory to use [integer]
+				\item[itemId] ID of the~item from user's inventory to use [integer]
 			\end{description}
 	
 	\subsection{Buy}
 		\label{json:buy}
-		Entity which specifies what item user wants to buy and from what \textit{shop}.
+		Entity which specifies what item user wants to buy and from what shop.
 
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[shopId] ID of the shop from which to buy [integer]
-				\item[itemId] ID of the item to buy [integer]
+				\item[shopId] ID of the~shop from which to buy [integer]
+				\item[itemId] ID of the~item to buy [integer]
 			\end{description}
 	
 	\subsection{Purchase}
@@ -449,7 +449,7 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[accessCode] Access code [string]
-				\item[productId] ID of the purchased product [string]
+				\item[productId] ID of the~purchased product [string]
 				\item[token] Purchase token from Google [string]
 			\end{description}
 		
@@ -459,23 +459,23 @@ Definitions of objects sent in HTTP response or request body. The objects are of
 		\subsubsection{Schema}
 			\begin{description}
 				\item[tag] OpenStreetMap category tag [string]
-				\item[source] Path to the XML file on server [string]
+				\item[source] Path to the~XML file on server [string]
 			\end{description}
 		
 	\subsection{AdminGameObject}
 		\label{json:admingameobject}
-		Admin entity describing a game object.
+		Admin entity describing a~game object.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[id] ID of an existing game object [integer, optional]
-				\item[gameObjectTypeId] ID of the type of the game object [integer]
-				\item[root] True if the object cannot have ancestors, false otherwise [boolean]
-				\item[childrenIds] IDs of the game object's children [array of integers]
+				\item[gameObjectTypeId] ID of the~type of the~game object [integer]
+				\item[root] True if the~object cannot have ancestors, false otherwise [boolean]
+				\item[childrenIds] IDs of the~game object's children [array of integers]
 			\end{description}
 			
 	\subsection{AdminGameObjectType}
 		\label{json:admingameobjecttype}
-		Admin entity describing a game object type.
+		Admin entity describing a~game object type.
 		\subsubsection{Schema}
 			\begin{description}
 				\item[id] ID of an existing game object type [integer, optional]

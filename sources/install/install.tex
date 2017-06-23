@@ -1,5 +1,5 @@
 \section{Prerequisites}
-The server has several dependencies which should be met before the installation process. Even though the target platform is Debian, the server should work on any operating system with Java support. While the server might work with software versions other than the ones I included, the compatibility is not guaranteed. The dependencies can be downloaded for free from the cited websites.
+The server has several dependencies which should be met before the~installation process. Even though the~target platform is Debian, the~server should work on any operating system with Java support. While the~server might work with software versions other than the~ones I specified, the~compatibility is not guaranteed. The dependencies can be downloaded for free from the~cited websites.
 
 \begin{enumerate}
 	\item MySQL 5.7 \cite{mysql}
@@ -8,62 +8,62 @@ The server has several dependencies which should be met before the installation 
 \end{enumerate}
 
 \section{Google Play Developer Service Account}
-Login server needs access to application's Google Play data to verify in-app purchases. Google allows reading the billing data through their API but the client has to be authenticated. Developers can create a \textit{Service account} in their \textit{Google Play Developer Console}, and use the account to access the API. For obvious security reasons, credentials to such account cannot be disclosed with the thesis. Requests to \textit{/purchase} endpoint on a server compiled from the source code on the SD card will result in an error.
+Login server needs access to application's Google Play data to verify in-app purchases. Google allows reading the~billing data through their API but the~client has to be authenticated. Developers can create a~\textit{Service account} in their \textit{Google Play Developer Console}, and use the~account to access the~API. For obvious security reasons, credentials to such account cannot be disclosed with the~thesis. Requests to \textit{/purchase} endpoint on a~server compiled from the~source code on the~SD card will result in an error.
 
 \section{Compilation}
-Although I enclosed compiled \textit{JAR} files on the SD card, the source code can be compiled using Maven \cite{maven}. Simply move to the root directory of a component and execute a Maven goal \textit{install} and optionally a goal \textit{clean}:\\
+Although I enclosed compiled \textit{JAR} files on the~SD card, the~source code can be compiled using Maven \cite{maven}. Simply move to the~root directory of a~component and execute a~Maven goal \textit{install} and optionally a~goal \textit{clean}:\\
 \emph{maven clean install}
 
 Compiled \textit{JAR} binaries and generated HTML documentation can be found in \textit{target/} folder upon successful compilation.
 
 \section{Database Initialization}
-The database must be initialized prior running the Database server component. I've created an SQL script which creates the database structure and imports initial data, such as game objects, locations, actions, and so on. The script is located at \textit{/BachelorsServer/Data/init\_database.sql} on the enclosed SD card.
+The database must be initialized prior running the~Database server component. I've built an SQL script which creates the~database structure and imports initial data, such as game objects, locations, actions, and so on. The script is located at \textit{/BachelorsServer/Data/init\_database.sql} on the~enclosed SD card.
 
-The MySQL server might not include timezone information rendering the application broken. You can import the time zones converting system time zones to SQL using\textit{mysql\_tzinfo\_to\_sql} tool and piping the output to \textit{mysql} program \cite{mysqltimezones}:\\
+The MySQL server might not include timezone information which would render the~application broken. You can import the~time zones by converting system time zones to SQL using\textit{mysql\_tzinfo\_to\_sql} tool and piping the~output to \textit{mysql} program \cite{mysqltimezones}:\\
 \emph{mysql\_tzinfo\_to\_sql /usr/share/zoneinfo | mysql -u root mysql}
 
 \section{Configuration}
-Default server configuration is available in \textit{config.yml} file which can be found in the root folder of each component on the enclosed SD card. The content of the configuration file is in YAML\footnote{YAML format specification can be found at \url{http://www.yaml.org/spec/1.2/spec.html}} format. The following text describes the meaning of important parameters.
+Default server configuration is available in \textit{config.yml} file which can be found in the~root folder of each component on the~enclosed SD card. The content of the~configuration file is in YAML\footnote{YAML format specification can be found at \url{http://www.yaml.org/spec/1.2/spec.html}} format. The following text describes the~meaning of important parameters.
 
 \paragraph*{Connection Server}
 \begin{description}
-	\item[loginServerUrl] URL of a Login Server instance (example: \textit{http://localhost:8090})
-	\item[databaseServerUrl] URL of a Database Server instance (example: \textit{http://localhost:8092})
+	\item[loginServerUrl] URL where a~Login Server instance listens (example: \textit{http://localhost:8090})
+	\item[databaseServerUrl] URL where a~Database Server instance listens (example: \textit{http://localhost:8092})
 	\item[server] Jetty web server configuration
 		\begin{description}
-			\item[applicationConnectors] Protocol and port on which the application listens. If you decide to use HTTPS protocol, additional fields configuring SSL like \textbf{keyStorePath} and \textbf{keyStorePassword} have to be included. (Example: \textit{HTTP} and \textit{8080})
-			\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8081})
+			\item[applicationConnectors] Protocol and port on which the~application listens. If you decide to use HTTPS protocol, additional fields configuring SSL like \textbf{keyStorePath} and \textbf{keyStorePassword} have to be included. (Example: \textit{HTTP} and \textit{8080})
+			\item[adminConnectors] Protocol and port on which the~server statistics are available  (example: \textit{HTTP} and \textit{8081})
 		\end{description}
 \end{description}
 
 \paragraph*{Login Server}
 \begin{description}
 	\item[mockToken] Substitute for Google ID token used for testing purposes (example: \textit{loremipsum})
-	\item[databaseServerUrl] URL of a Database Server instance (example: \textit{http://localhost:8092})
+	\item[databaseServerUrl] URL where a~Database Server instance listens (example: \textit{http://localhost:8092})
 	\item[server] Jetty web server configuration
 	\begin{description}
-		\item[applicationConnectors] Protocol and port on which the application listens (example: \textit{HTTP} and \textit{8090})
-		\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8091})
+		\item[applicationConnectors] Protocol and port on which the~application listens (example: \textit{HTTP} and \textit{8090})
+		\item[adminConnectors] Protocol and port on which the~server statistics are available  (example: \textit{HTTP} and \textit{8091})
 	\end{description}
 \end{description}
 
 \paragraph*{Database Server}
 \begin{description}
-	\item[mysqlUri] Full Java Database Connectivity URI of MySQL server schema where application data are located (example: \textit{jdbc:mysql://localhost/bachelors})
+	\item[mysqlUri] Java Database Connectivity URI of MySQL server schema where data are located (example: \textit{jdbc:mysql://localhost/bachelors})
 	\item[mysqlUser] User at MySQL server (example: \textit{root})
-	\item[mysqlPass] Pasword of the user MySQL user (example: \textit{password})
+	\item[mysqlPass] Pasword of the~user MySQL user (example: \textit{password})
 	\item[redisUri] Full URL of Redis server (example: \textit{localhost})
-	\item[redisPort] Optional port of the Redis server (example: \textit{1467})
-	\item[redisPass] Password to the Redis server (example: \textit{password})
+	\item[redisPort] Optional port of the~Redis server (example: \textit{1467})
+	\item[redisPass] Password to the~Redis server (example: \textit{password})
 	\item[server] Jetty web server configuration
 	\begin{description}
-		\item[applicationConnectors] Protocol and port on which the application listens (example: \textit{HTTP} and \textit{8092})
-		\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8093})
+		\item[applicationConnectors] Protocol and port on which the~application listens (example: \textit{HTTP} and \textit{8092})
+		\item[adminConnectors] Protocol and port on which the~server statistics are available  (example: \textit{HTTP} and \textit{8093})
 	\end{description}
 \end{description}
 
 
-\section{Running the Server}
-To start the server simply run the compiled JAR files with argument \textit{server} and path to the configuration file. For example:\\
+\section{Running the~Server}
+To start the~server simply run the~compiled JAR files with argument \textit{server} and path to the~configuration file. For example:\\
 \textit{java -jar ConnectionServer.jar server config.yml}
 
