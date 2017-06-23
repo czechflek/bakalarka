@@ -7,6 +7,9 @@ The server has several dependencies which should be met before the installation 
 	\item Java 8 or OpenJDK 8	
 \end{enumerate}
 
+\section{Google Play Developer Service Account}
+Login server needs access to application's Google Play data to verify in-app purchases. Google allows reading the billing data through their API but the client has to be authenticated. Developers can create a \textit{Service account} in their \textit{Google Play Developer Console}, and use the account to access the API. For obvious security reasons, credentials to such account cannot be disclosed with the thesis. Requests to \textit{/purchase} endpoint on a server compiled from the source code on the SD card will result in an error.
+
 \section{Compilation}
 Although I enclosed compiled \textit{JAR} files on the SD card, the source code can be compiled using Maven \cite{maven}. Simply move to the root directory of a component and execute a Maven goal \textit{install} and optionally a goal \textit{clean}:\\
 \emph{maven clean install}
@@ -20,7 +23,7 @@ The MySQL server might not include timezone information rendering the applicatio
 \emph{mysql\_tzinfo\_to\_sql /usr/share/zoneinfo | mysql -u root mysql}
 
 \section{Configuration}
-Default server configuration is available in \textit{config.yml} file which can be found in the root folder of each component on the enclosed SD card. The content of the configuration file is in YAML\footnote{YAML format specification can be found at \url{http://www.yaml.org/spec/1.2/spec.html}} format.The following text describes the meaning of important parameters.
+Default server configuration is available in \textit{config.yml} file which can be found in the root folder of each component on the enclosed SD card. The content of the configuration file is in YAML\footnote{YAML format specification can be found at \url{http://www.yaml.org/spec/1.2/spec.html}} format. The following text describes the meaning of important parameters.
 
 \paragraph*{Connection Server}
 \begin{description}
@@ -28,8 +31,8 @@ Default server configuration is available in \textit{config.yml} file which can 
 	\item[databaseServerUrl] URL of a Database Server instance (example: \textit{http://localhost:8092})
 	\item[server] Jetty web server configuration
 		\begin{description}
-			\item[applicationConnectors] Protocol and port o which the application listens (example: \textit{HTTP} and \textit{8080})
-			\item[adminConnectors] Protocol and port o which the server statistics are available  (example: \textit{HTTP} and \textit{8081})
+			\item[applicationConnectors] Protocol and port on which the application listens. If you decide to use HTTPS protocol, additional fields configuring SSL like \textbf{keyStorePath} and \textbf{keyStorePassword} have to be included. (Example: \textit{HTTP} and \textit{8080})
+			\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8081})
 		\end{description}
 \end{description}
 
@@ -39,8 +42,8 @@ Default server configuration is available in \textit{config.yml} file which can 
 	\item[databaseServerUrl] URL of a Database Server instance (example: \textit{http://localhost:8092})
 	\item[server] Jetty web server configuration
 	\begin{description}
-		\item[applicationConnectors] Protocol and port o which the application listens (example: \textit{HTTP} and \textit{8090})
-		\item[adminConnectors] Protocol and port o which the server statistics are available  (example: \textit{HTTP} and \textit{8091})
+		\item[applicationConnectors] Protocol and port on which the application listens (example: \textit{HTTP} and \textit{8090})
+		\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8091})
 	\end{description}
 \end{description}
 
@@ -54,10 +57,11 @@ Default server configuration is available in \textit{config.yml} file which can 
 	\item[redisPass] Password to the Redis server (example: \textit{password})
 	\item[server] Jetty web server configuration
 	\begin{description}
-		\item[applicationConnectors] Protocol and port o which the application listens (example: \textit{HTTP} and \textit{8092})
-		\item[adminConnectors] Protocol and port o which the server statistics are available  (example: \textit{HTTP} and \textit{8093})
+		\item[applicationConnectors] Protocol and port on which the application listens (example: \textit{HTTP} and \textit{8092})
+		\item[adminConnectors] Protocol and port on which the server statistics are available  (example: \textit{HTTP} and \textit{8093})
 	\end{description}
 \end{description}
+
 
 \section{Running the Server}
 To start the server simply run the compiled JAR files with argument \textit{server} and path to the configuration file. For example:\\

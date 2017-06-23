@@ -59,9 +59,9 @@ style=iso-numeric
 
 \acknowledgements{I would like to thank my supervisor Ing. Miroslav Balík, Ph.D. for his good leadership and assistance. Big thanks go to my colleague Tomáš Zahálka for excellent cooperation. Thanks go to my family and friends for their support. Lastly, I would like to humbly thank myself for doing only a healthy level of procrastination.}
 
-\abstractEN{The thesis goes through the entire process of developing a functional prototype of a mobile multiplayer role-playing game with augmented reality features. The project is divided into two parts. First one is the Client which is installed at players' devices and allows them to interact with the game. The second one is the Server which provides multiplayer support for the Client, carries the game logic, and manages data persistence. This thesis deals only with development of the Server in Java language and involves challenges like designing and implementing an interface for clients to access the server features, creating a database structure capable of supporting a multiplayer game, and testing. The server features include support for interactions with game objects, such as fighting monster and using items, verification of in-app purchases made on Android system, and also geo-spatial search of game locations near a player. The prototype can be considered an Alpha version of the application and is ready to fully support the Client part.}
+\abstractEN{The thesis goes through the entire process of developing a functional prototype of a mobile role-playing game with augmented reality features. The project is divided into two parts. First one is the Client which is installed at players' devices and allows them to interact with the game. The second one is the Server which provides a support for the Client, carries the game logic, and manages data persistence. This thesis deals only with development of the Server in Java language and involves challenges like designing and implementing an interface for clients to access the server features, creating a database structure capable of supporting a multiplayer game, and testing. The server features include support for interactions with game objects, such as fighting monster and using items, verification of in-app purchases made on Android system, and also geo-spatial search of game locations near a player. The prototype can be considered an Alpha version of the application and is ready to fully support the Client part.}
 
-\abstractCS{Má bakalářská práce se zabývá procesem vývoje funkčního prototypu hry na hrdiny pro mobilní zařízení. Hra je určena pro více hráčů a obsahuje prvky rozšířené reality. Celý projekt je rozdělen na dvě části. První částí je Klient, aplikace nacházející se přímo na zařízeních hráčů a umožnující jim ovládat hru. Druhou částí je Server, který umožňuje hru více hráčů současně, vykoná herní logiku a zajišťuje uchovávání dat. Tato práce se zabývá vývojem pouze serverové časti. Práce zahrnuje návrh a vytvoření rozhraní umožnující klientům pracovat s funkcemi serveru, dále návrh struktury databázových dat a také testování. Mezi funkce Serveru patří podpora akcí spojených s herními objekty, jako například zabíjení monster či používání objektů, ověřování mikrostransakcí provedených v systému Android a vyhledávání herních lokací v blízkosti hráče. Vzniklý prototyp odpovídá stavu Alfa verze aplikace a je připraven plně podporovat klientskou část.}
+\abstractCS{Má bakalářská práce se zabývá procesem vývoje funkčního prototypu hry na hrdiny pro mobilní zařízení. Hra je určena pro více hráčů a obsahuje prvky rozšířené reality. Celý projekt je rozdělen na dvě části. První částí je Klient, aplikace nacházející se přímo na zařízeních hráčů a umožnující jim ovládat hru. Druhou částí je Server, který vykoná herní logiku a zajišťuje uchovávání dat. Tato práce se zabývá vývojem pouze serverové časti. Práce zahrnuje návrh a vytvoření rozhraní umožnující klientům pracovat s funkcemi serveru, dále návrh struktury databázových dat a také testování. Mezi funkce Serveru patří podpora akcí spojených s herními objekty, jako například zabíjení monster či používání objektů, ověřování mikrostransakcí provedených v systému Android a vyhledávání herních lokací v blízkosti hráče. Vzniklý prototyp odpovídá stavu Alfa verze aplikace a je připraven plně podporovat klientskou část.}
 
 \placeForDeclarationOfAuthenticity{Prague}
 
@@ -139,20 +139,20 @@ style=iso-numeric
 	\chapter{Installation Instructions}
 	\input{install/install}
 	
-	\chapter{Contents of enclosed CD}
+	\chapter{Contents of Enclosed SD Card}
 	
 	%change appropriately
 	
 	\begin{figure}
 		\dirtree{%
-			.1 readme.txt\DTcomment{the file with CD contents description}.
-			.1 exe\DTcomment{the directory with executables}.
-			.1 src\DTcomment{the directory of source codes}.
-			.2 wbdcm\DTcomment{implementation sources}.
-			.2 thesis\DTcomment{the directory of \LaTeX{} source codes of the thesis}.
-			.1 text\DTcomment{the thesis text directory}.
+			.1 readme.txt\DTcomment{the file with SD card contents description}.
+			.1 documentation\DTcomment{the directory of documentation}.
+			.1 server\DTcomment{the directory of the server}.
+			.2 BachelorsPrototype\DTcomment{the directory of server source codes}.
+			.2 executables\DTcomment{the directory with executables and configuration files}.
+			.1 thesis\DTcomment{the directory of the thesis}.
+			.2 latex\DTcomment{the directory of \LaTeX{} source codes of the thesis}.			
 			.2 thesis.pdf\DTcomment{the thesis text in PDF format}.
-			.2 thesis.ps\DTcomment{the thesis text in PS format}.
 		}
 	\end{figure}
 	
